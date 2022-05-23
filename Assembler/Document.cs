@@ -32,13 +32,19 @@ namespace Assembler {
                     throw new AssemblerException("Duplicate label found", line.LineNumber);
             }
 
-            if (line.Instruction == "db") {
-                foreach (IValue value in line.Arguments) {
-                    if (value is String strValue) {
-                        writer.WriteString(strValue.Text);
-                    } else {
-                        writer.WriteByte(value.GetValue(scope));
-                    }
+            if (line.Instruction != null) {
+                switch (line.Instruction) {
+                    case "org": SetOrigin(line); break;
+                    break;
+                    case "db":
+                        foreach (IValue value in line.Arguments) {
+                            if (value is String strValue) {
+                                writer.WriteString(strValue.Text);
+                            } else {
+                                writer.WriteByte(value.GetValue(scope));
+                            }
+                        }
+                    break;
                 }
             }
 
@@ -52,6 +58,13 @@ namespace Assembler {
             //Console.WriteLine("Block close: {0}", line.IsBlockClose);
             //Console.WriteLine("Comments   : {0}", line.Comments);
             //Console.WriteLine("-----------------------------------------------");
+        }
+
+        private void SetOrigin(AssemblyLine line) {
+            if (line.Arguments == null || line.Arguments.Length != 1)
+                throw new AssemblerException("Unexpected argument count for org", line.LineNumber);
+
+            writer.Origin = line.Arguments[0].GetValue(null);
         }
     }
 }

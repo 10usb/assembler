@@ -8,13 +8,17 @@ using System.Threading.Tasks;
 using String = Assembler.Values.String;
 
 namespace Assembler {
-    public class Document : IProcessor {
+    public class Document : IProcessor, IDisposable {
         private FileInfo output;
-        private BinaryWriter writer;
+        private Writer writer;
 
         public Document(FileInfo output) {
             this.output = output;
-            writer = new BinaryWriter(output.OpenWrite(), Encoding.UTF8, false);
+            writer = new Writer(output.OpenWrite());
+        }
+
+        public void Dispose() {
+            writer.Dispose();
         }
 
         public void ProcessLine(AssemblyLine line) {
@@ -22,15 +26,12 @@ namespace Assembler {
             if (line.Instruction == "db") {
                 foreach (IValue value in line.Arguments) {
                     if (value is String strValue) {
-                        writer.Write(strValue.Text.ToCharArray());
+                        writer.WriteString(strValue.Text);
                     } else {
-                        long number = value.GetValue(scope);
-                        writer.Write((byte)number);
+                        writer.WriteByte(value.GetValue(scope));
                     }
                 }
             }
-
-            writer.Flush();
 
             Console.WriteLine(line);
             //Console.WriteLine("Label      : {0}", line.Label);

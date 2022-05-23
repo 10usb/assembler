@@ -12,7 +12,9 @@
             this.right = right;
         }
         public long GetValue(IScope scope) {
-            throw new System.NotImplementedException();
+            long left = this.left.GetValue(scope);
+            long right = this.right.GetValue(scope);
+            return left | right;
         }
 
         public override string ToString() {

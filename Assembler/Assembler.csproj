@@ -51,6 +51,7 @@
     <Compile Include="IProcessor.cs" />
     <Compile Include="IScope.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="ReferenceTable.cs" />
     <Compile Include="Values\Expression.cs" />
     <Compile Include="Values\Number.cs" />
     <Compile Include="Values\NumberFormat.cs" />

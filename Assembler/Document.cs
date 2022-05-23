@@ -9,20 +9,29 @@ using String = Assembler.Values.String;
 
 namespace Assembler {
     public class Document : IProcessor, IDisposable {
-        private FileInfo output;
-        private Writer writer;
+        private readonly ReferenceTable referenceTable;
+        private readonly Writer writer;
 
         public Document(FileInfo output) {
-            this.output = output;
+            referenceTable = new ReferenceTable();
             writer = new Writer(output.OpenWrite());
         }
 
         public void Dispose() {
+
+            Console.WriteLine("----------------------------");
+            Console.WriteLine(referenceTable);
             writer.Dispose();
         }
 
         public void ProcessLine(AssemblyLine line) {
             IScope scope = null;
+
+            if (line.Label != null) {
+                if (!referenceTable.Add(line.Label, writer.Position))
+                    throw new AssemblerException("Duplicate label found", line.LineNumber);
+            }
+
             if (line.Instruction == "db") {
                 foreach (IValue value in line.Arguments) {
                     if (value is String strValue) {

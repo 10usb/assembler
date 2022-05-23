@@ -8,6 +8,13 @@ namespace Assembler {
         private string modifier;
         private string instruction;
         private string comments;
+        private int lineNr;
+
+        public AssemblyLine(int lineNr) {
+            this.lineNr = lineNr;
+        }
+
+        public int LineNumber { get => lineNr; }
 
         public string Label {
             get { return label; }

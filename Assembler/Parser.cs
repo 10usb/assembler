@@ -38,7 +38,7 @@ namespace Assembler {
                 if (match.Groups[5].Value.Length > 0)
                     arguments = ParseArguments(match.Groups[5].Value).ToArray();
 
-                AssemblyLine assemblyLine = new AssemblyLine {
+                AssemblyLine assemblyLine = new AssemblyLine(lineNr) {
                     Label = match.Groups[1].Value,
                     Assignment = match.Groups[2].Value,
                     Modifier = match.Groups[3].Value,

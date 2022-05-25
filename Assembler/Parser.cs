@@ -11,7 +11,7 @@ namespace Assembler {
     public class Parser {
         static readonly Regex linePattern = new Regex(@"^(?:([a-zA-Z0-9]+):)?\s*(?:(?:(?:([a-zA-Z0-9]+)\s*=|(?:([+\-&!*?$%=~}]+)\s*)?([a-zA-Z0-9]+))\s*(.*?)\s*({)?)|(}))?\s*(;.+)?$", RegexOptions.Compiled);
         static readonly Regex valueRegex = new Regex(@"^\s*(?:([1-9][0-9]*\b|0\b)|(0x[0-9a-fA-F]+\b)|(0[0-7]+\b)|([01]+b\b)|([a-zA-Z][a-zA-Z0-9]*)|""([^""]*(?:""""[^""]*)*)""|(((?<open>\()[^()]*)+([^()]*(?<-open>\)))+(?(open)(?!))))", RegexOptions.Compiled);
-        static readonly Regex operatorRegex = new Regex(@"^\s*([+\-*/%|=\^<>]|<<|>>|>=|<=|!=|is)\s*", RegexOptions.Compiled);
+        static readonly Regex operatorRegex = new Regex(@"^\s*([+\-*/%|=\^<>&]|<<|>>|>=|<=|!=|is)\s*", RegexOptions.Compiled);
         private IProcessor processor;
         const int GROUP_DECIMAL = 1;
         const int GROUP_HEX = 2;
@@ -105,7 +105,7 @@ namespace Assembler {
 
                 Match rightMatch = valueRegex.Match(value);
                 IValue right = ParseValue(rightMatch);
-                return new Expression(operatorMatch.Groups[1].Value, left, right);
+                return new Expression(GetOperator(operatorMatch.Groups[1].Value), left, right);
             }
 
 
@@ -116,6 +116,28 @@ namespace Assembler {
             Console.WriteLine("\\---------------------------------------------/");
 
             return null;
+        }
+
+        private Operation GetOperator(string value) {
+            switch (value) {
+                case "+": return Operation.Add;
+                case "-": return Operation.Substract;
+                case "*": return Operation.Muliply;
+                case "/": return Operation.Divide;
+                case "%": return Operation.Modulo;
+                case "&": return Operation.And;
+                case "|": return Operation.Or;
+                case "^": return Operation.Xor;
+                case "=": return Operation.Equal;
+                case "<": return Operation.Less;
+                case ">": return Operation.Greater;
+                case "!=": return Operation.NotEqual;
+                case "<=": return Operation.LessOrEqual;
+                case ">=": return Operation.GreaterOrEqual;
+                case "is": return Operation.Is;
+            }
+
+            throw new Exception("Unknown operation");
         }
     }
 }

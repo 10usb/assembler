@@ -11,11 +11,13 @@ namespace Assembler {
     public class Document : IProcessor, IDisposable {
         private readonly ReferenceTable referenceTable;
         private readonly SymbolTable symbolTable;
+        private readonly VariableScope variableScope;
         private readonly Writer writer;
 
         public Document(FileInfo output) {
             referenceTable = new ReferenceTable();
             symbolTable = new SymbolTable();
+            variableScope = new VariableScope();
             writer = new Writer(output.OpenWrite());
         }
 
@@ -37,8 +39,6 @@ namespace Assembler {
         }
 
         public void ProcessLine(AssemblyLine line) {
-            IScope scope = null;
-
             if (line.Label != null) {
                 if (!referenceTable.Add(line.Label, writer.Position))
                     throw new AssemblerException("Duplicate label found", line.LineNumber);
@@ -47,7 +47,7 @@ namespace Assembler {
             if (line.Instruction != null) {
                 switch (line.Instruction) {
                     case "org": SetOrigin(line); break;
-                    case "db": PutByte(line, scope); break;
+                    case "db": PutByte(line, variableScope); break;
                 }
             }
 

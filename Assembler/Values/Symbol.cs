@@ -1,14 +1,18 @@
 ﻿namespace Assembler.Values {
     public class Symbol : IValue {
-        private string value;
+        private string name;
 
         public ValueType Type => ValueType.Symbol;
 
-        public Symbol(string value) {
-            this.value = value;
+        public Symbol(string name) {
+            this.name = name;
         }
 
         public bool GetValue(IScope scope, out long value) {
+            IValue variable = scope.Get(name);
+            if (variable != null)
+                return variable.GetValue(scope, out value);
+
             value = default;
             return false;
         }
@@ -17,7 +21,7 @@
         }
 
         public override string ToString() {
-            return value;
+            return name;
         }
     }
 }

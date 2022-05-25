@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Values;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,6 +19,13 @@ namespace Assembler {
 
             dictionary.Add(label, position);
             return true;
+        }
+
+        public IValue Get(string name) {
+            if (!dictionary.ContainsKey(name))
+                return null;
+
+            return new Number(dictionary[name], NumberFormat.Hex);
         }
 
         public override string ToString() {

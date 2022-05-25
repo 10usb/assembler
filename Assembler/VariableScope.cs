@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler {
-    public interface IScope {
-        IValue Get(string name);
+    public class VariableScope : IScope {
+        public IValue Get(string name) {
+            return null;
+        }
     }
 }

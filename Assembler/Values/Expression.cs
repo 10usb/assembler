@@ -49,7 +49,7 @@ namespace Assembler.Values {
                 left = this.left.Resolve(scope);
             }
 
-            if (this.left.GetValue(scope, out value)) {
+            if (this.right.GetValue(scope, out value)) {
                 right = new Number(value, NumberFormat.Hex);
             } else {
                 right = this.left.Resolve(scope);

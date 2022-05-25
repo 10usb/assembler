@@ -22,11 +22,10 @@ namespace Assembler {
 
         public override string ToString() {
             StringBuilder builder = new StringBuilder();
-            foreach (KeyValuePair<string, long> entry in dictionary) {
 
+            foreach (KeyValuePair<string, long> entry in dictionary) {
                 builder.AppendFormat("{1:X8}: {0}\n", entry.Key, entry.Value);
             }
-
 
             return builder.ToString();
         }

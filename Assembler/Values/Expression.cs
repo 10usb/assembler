@@ -11,10 +11,18 @@
             this.left = left;
             this.right = right;
         }
-        public long GetValue(IScope scope) {
-            long left = this.left.GetValue(scope);
-            long right = this.right.GetValue(scope);
-            return left | right;
+
+        public bool GetValue(IScope scope, out long value) {
+            if (!(this.left.GetValue(scope, out long left) && this.right.GetValue(scope, out long right))) {
+                value = default;
+                return false;
+            }
+
+            value = left | right;
+            return true;
+        }
+        public IValue Resolve(IScope scope) {
+            throw new System.NotImplementedException();
         }
 
         public override string ToString() {

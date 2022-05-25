@@ -10,10 +10,12 @@ using String = Assembler.Values.String;
 namespace Assembler {
     public class Document : IProcessor, IDisposable {
         private readonly ReferenceTable referenceTable;
+        private readonly SymbolTable symbolTable;
         private readonly Writer writer;
 
         public Document(FileInfo output) {
             referenceTable = new ReferenceTable();
+            symbolTable = new SymbolTable();
             writer = new Writer(output.OpenWrite());
         }
 
@@ -21,6 +23,8 @@ namespace Assembler {
 
             Console.WriteLine("----------------------------");
             Console.WriteLine(referenceTable);
+            Console.WriteLine("----------------------------");
+            Console.WriteLine(symbolTable);
             writer.Dispose();
         }
 
@@ -35,16 +39,7 @@ namespace Assembler {
             if (line.Instruction != null) {
                 switch (line.Instruction) {
                     case "org": SetOrigin(line); break;
-                    break;
-                    case "db":
-                        foreach (IValue value in line.Arguments) {
-                            if (value is String strValue) {
-                                writer.WriteString(strValue.Text);
-                            } else {
-                                writer.WriteByte(value.GetValue(scope));
-                            }
-                        }
-                    break;
+                    case "db": PutByte(line, scope); break;
                 }
             }
 
@@ -60,11 +55,29 @@ namespace Assembler {
             //Console.WriteLine("-----------------------------------------------");
         }
 
+        private void PutByte(AssemblyLine line, IScope scope) {
+            foreach (IValue argument in line.Arguments) {
+                if (argument is String strValue) {
+                    writer.WriteString(strValue.Text);
+                    continue;
+                }
+
+                if (!argument.GetValue(scope, out long value)) {
+                    symbolTable.Add(writer.FileOffset, argument.Resolve(scope));
+                }
+
+                writer.WriteByte(value);
+            }
+        }
+
         private void SetOrigin(AssemblyLine line) {
             if (line.Arguments == null || line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for org", line.LineNumber);
 
-            writer.Origin = line.Arguments[0].GetValue(null);
+            if (!line.Arguments[0].GetValue(null, out long value))
+                throw new AssemblerException("Can't resolve origin value", line.LineNumber);
+
+            writer.Origin = value;
         }
     }
 }

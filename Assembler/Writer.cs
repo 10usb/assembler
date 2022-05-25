@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assembler {
     public class Writer : IDisposable {
-        private Stream stream;
+        private readonly Stream stream;
         private long origin;
         private long offset;
 
@@ -28,6 +28,12 @@ namespace Assembler {
         public long Position {
             get {
                 return origin + offset;
+            }
+        }
+
+        public long FileOffset {
+            get {
+                return stream.Position;
             }
         }
 

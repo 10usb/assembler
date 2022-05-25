@@ -14,6 +14,8 @@ namespace Assembler.Values {
         And,
         Or,
         Xor,
+        ShiftLeft,
+        ShiftRight,
         Equal,
         Less,
         Greater,

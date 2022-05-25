@@ -29,6 +29,8 @@ namespace Assembler.Values {
                 case Operation.And: value = left & right; break;
                 case Operation.Or: value = left | right; break;
                 case Operation.Xor: value = left ^ right; break;
+                case Operation.ShiftLeft: value = left << (int)right; break;
+                case Operation.ShiftRight: value = left >> (int)right; break;
                 case Operation.Equal: value = left == right ? 1 : 0; break;
                 case Operation.Less: value = left < right ? 1 : 0; break;
                 case Operation.Greater: value = left > right ? 1 : 0; break;

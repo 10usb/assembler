@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler {
-    public class ReferenceTable {
-        private Dictionary<string, long> dictionary;
+    public class ReferenceTable : IScope {
+        private readonly Dictionary<string, long> dictionary;
 
         public ReferenceTable() {
             dictionary = new Dictionary<string, long>();

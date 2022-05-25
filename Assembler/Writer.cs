@@ -41,6 +41,15 @@ namespace Assembler {
             this.stream = stream;
         }
 
+        internal void Seek(long offset) {
+            stream.Position = offset;
+        }
+
+        internal void SetByte(long value) {
+            byte[] data = new byte[] { (byte)value };
+            stream.Write(data, 0, data.Length);
+        }
+
         internal void WriteString(string text) {
             Write(Encoding.UTF8.GetBytes(text));
         }

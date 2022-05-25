@@ -1,12 +1,13 @@
 ﻿using Assembler.Values;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler {
-    public class SymbolTable {
+    public class SymbolTable : IEnumerable<SymbolTable.Entry> {
         public List<Entry> entries;
 
         public SymbolTable() {
@@ -20,6 +21,10 @@ namespace Assembler {
             });
         }
 
+        public IEnumerator<Entry> GetEnumerator() {
+            return entries.GetEnumerator();
+        }
+
         public override string ToString() {
             StringBuilder builder = new StringBuilder();
 
@@ -30,10 +35,13 @@ namespace Assembler {
             return builder.ToString();
         }
 
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
+
         public class Entry {
             public long Offset { get; set; }
             public IValue Reference { get; set; }
         }
-
     }
 }

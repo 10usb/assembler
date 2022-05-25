@@ -15,15 +15,16 @@ namespace Assembler {
             FileInfo source = new FileInfo("I:\\Programming\\Assembler\\Resources\\source.asm");
             FileInfo output = new FileInfo("I:\\Programming\\Assembler\\Resources\\source.bin");
 
-            using (Document document = new Document(output)) {
-                Parser parser = new Parser(document);
-                try {
+            try {
+                using (Document document = new Document(output)) {
+                    Parser parser = new Parser(document);
+
                     using (StreamReader reader = source.OpenText()) {
                         parser.Parse(reader);
                     }
-                } catch (AssemblerException e) {
-                    Console.Error.WriteLine(e.Message, e.LineNr);
                 }
+            } catch (AssemblerException e) {
+                Console.Error.WriteLine(e.Message, e.LineNr);
             }
 
             Console.ReadKey();

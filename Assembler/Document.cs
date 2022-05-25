@@ -20,6 +20,14 @@ namespace Assembler {
         }
 
         public void Dispose() {
+            foreach (SymbolTable.Entry entry in symbolTable) {
+                if (!entry.Reference.GetValue(referenceTable, out long value))
+                    throw new AssemblerException("Unknown symbol", 0);
+
+                writer.Seek(entry.Offset);
+                writer.SetByte(value);
+            }
+
 
             Console.WriteLine("----------------------------");
             Console.WriteLine(referenceTable);

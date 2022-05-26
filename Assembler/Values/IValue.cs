@@ -2,7 +2,8 @@
     public interface IValue {
         ValueType Type { get; }
 
-        bool GetValue(IScope scope, out long value);
+        IConstant GetValue(IScope scope);
+
         IValue Resolve(IScope scope);
     }
 }

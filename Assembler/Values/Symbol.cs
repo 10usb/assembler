@@ -7,15 +7,10 @@
         public Symbol(string name) {
             this.name = name;
         }
-
-        public bool GetValue(IScope scope, out long value) {
-            IValue variable = scope.Get(name);
-            if (variable != null)
-                return variable.GetValue(scope, out value);
-
-            value = default;
-            return false;
+        public IConstant GetValue(IScope scope) {
+            return scope.Get(name);
         }
+
         public IValue Resolve(IScope scope) {
             return this;
         }

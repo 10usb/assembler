@@ -7,8 +7,21 @@ using System.Threading.Tasks;
 
 namespace Assembler {
     public class VariableScope : IScope {
-        public IValue Get(string name) {
+        private Dictionary<string, IConstant> table;
+
+        public VariableScope() {
+            table = new Dictionary<string, IConstant>();
+        }
+
+        public IConstant Get(string name) {
+            if (table.ContainsKey(name))
+                return table[name];
+
             return null;
+        }
+
+        public void Set(string name, IConstant constant) {
+            table[name] = constant;
         }
     }
 }

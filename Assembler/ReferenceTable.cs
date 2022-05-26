@@ -21,7 +21,7 @@ namespace Assembler {
             return true;
         }
 
-        public IValue Get(string name) {
+        public IConstant Get(string name) {
             if (!dictionary.ContainsKey(name))
                 return null;
 

@@ -23,11 +23,15 @@ namespace Assembler {
 
         public void Dispose() {
             foreach (SymbolTable.Entry entry in symbolTable) {
-                if (!entry.Reference.GetValue(referenceTable, out long value))
-                    throw new AssemblerException("Unknown symbol", 0);
+                IConstant value = entry.Reference.GetValue(referenceTable) as Number;
+                if(value == null)
+                    throw new AssemblerException(string.Format("Unknown symbol in '{0}'", entry.Reference), 0);
+
+                if(!(value is Number number))
+                    throw new AssemblerException("Invalid data type for symbol", 0);
 
                 writer.Seek(entry.Offset);
-                writer.SetByte(value);
+                writer.SetByte(number.Value);
             }
 
 
@@ -51,7 +55,12 @@ namespace Assembler {
                 }
             }
 
+            if (line.Assignment != null) {
+                variableScope.Set(line.Assignment, line.Arguments[0].GetValue(variableScope));
+            }
+
             Console.WriteLine(line);
+
             //Console.WriteLine("Label      : {0}", line.Label);
             //Console.WriteLine("Assignment : {0}", line.Assignment);
             //Console.WriteLine("Modifier   : {0}", line.Modifier);
@@ -65,16 +74,21 @@ namespace Assembler {
 
         private void PutByte(AssemblyLine line, IScope scope) {
             foreach (IValue argument in line.Arguments) {
-                if (argument is String strValue) {
+                IConstant constant = argument.GetValue(scope);
+
+                if (constant is String strValue) {
                     writer.WriteString(strValue.Text);
                     continue;
                 }
 
-                if (!argument.GetValue(scope, out long value)) {
+                Number number = constant as Number;
+                if (constant == null) {
                     symbolTable.Add(writer.FileOffset, argument.Resolve(scope));
-                }
 
-                writer.WriteByte(value);
+                    writer.WriteByte(0);
+                } else {
+                    writer.WriteByte(number.Value);
+                }
             }
         }
 
@@ -82,10 +96,10 @@ namespace Assembler {
             if (line.Arguments == null || line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for org", line.LineNumber);
 
-            if (!line.Arguments[0].GetValue(null, out long value))
+            if(!(line.Arguments[0].GetValue(null) is Number number))
                 throw new AssemblerException("Can't resolve origin value", line.LineNumber);
 
-            writer.Origin = value;
+            writer.Origin = number.Value;
         }
     }
 }

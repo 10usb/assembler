@@ -1,5 +1,5 @@
 ﻿namespace Assembler.Values {
-    public class String : IValue {
+    public class String : IValue, IConstant {
         private readonly string value;
 
         public ValueType Type => ValueType.String;
@@ -9,9 +9,8 @@
         public String(string value) {
             this.value = value;
         }
-
-        public bool GetValue(IScope scope, out long value) {
-            throw new System.NotImplementedException();
+        public IConstant GetValue(IScope scope) {
+            return this;
         }
 
         public IValue Resolve(IScope scope) {

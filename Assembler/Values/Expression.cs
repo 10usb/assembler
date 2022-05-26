@@ -14,48 +14,44 @@ namespace Assembler.Values {
             this.right = right;
         }
 
-        public bool GetValue(IScope scope, out long value) {
-            if (!(this.left.GetValue(scope, out long left) && this.right.GetValue(scope, out long right))) {
-                value = default;
-                return false;
-            }
+        public IConstant GetValue(IScope scope) {
+            Number left = this.left.GetValue(scope) as Number;
+            if (left == null)
+                return null;
+
+            Number right = this.right.GetValue(scope) as Number;
+            if (left == null)
+                return null;
 
             switch (operation) {
-                case Operation.Add: value = left + right; break;
-                case Operation.Substract: value = left - right; break;
-                case Operation.Muliply: value = left * right; break;
-                case Operation.Divide: value = left / right; break;
-                case Operation.Modulo: value = left % right; break;
-                case Operation.And: value = left & right; break;
-                case Operation.Or: value = left | right; break;
-                case Operation.Xor: value = left ^ right; break;
-                case Operation.ShiftLeft: value = left << (int)right; break;
-                case Operation.ShiftRight: value = left >> (int)right; break;
-                case Operation.Equal: value = left == right ? 1 : 0; break;
-                case Operation.Less: value = left < right ? 1 : 0; break;
-                case Operation.Greater: value = left > right ? 1 : 0; break;
-                case Operation.NotEqual: value = left != right ? 1 : 0; break;
-                case Operation.LessOrEqual: value = left <= right ? 1 : 0; break;
-                case Operation.GreaterOrEqual: value = left >= right ? 1 : 0; break;
+                case Operation.Add: return new Number(left.Value + right.Value, NumberFormat.Decimal); break;
+                case Operation.Substract: return new Number(left.Value - right.Value, NumberFormat.Decimal); break;
+                case Operation.Muliply: return new Number(left.Value * right.Value, NumberFormat.Decimal); break;
+                case Operation.Divide: return new Number(left.Value / right.Value, NumberFormat.Decimal); break;
+                case Operation.Modulo: return new Number(left.Value % right.Value, NumberFormat.Decimal); break;
+                case Operation.And: return new Number(left.Value & right.Value, NumberFormat.Decimal); break;
+                case Operation.Or: return new Number(left.Value | right.Value, NumberFormat.Decimal); break;
+                case Operation.Xor: return new Number(left.Value ^ right.Value, NumberFormat.Decimal); break;
+                case Operation.ShiftLeft: return new Number(left.Value << (int)right.Value, NumberFormat.Decimal); break;
+                case Operation.ShiftRight: return new Number(left.Value >> (int)right.Value, NumberFormat.Decimal); break;
+                case Operation.Equal: return new Number(left.Value == right.Value ? 1 : 0, NumberFormat.Decimal); break;
+                case Operation.Less: return new Number(left.Value < right.Value ? 1 : 0, NumberFormat.Decimal); break;
+                case Operation.Greater: return new Number(left.Value > right.Value ? 1 : 0, NumberFormat.Decimal); break;
+                case Operation.NotEqual: return new Number(left.Value != right.Value ? 1 : 0, NumberFormat.Decimal); break;
+                case Operation.LessOrEqual: return new Number(left.Value <= right.Value ? 1 : 0, NumberFormat.Decimal); break;
+                case Operation.GreaterOrEqual: return new Number(left.Value >= right.Value ? 1 : 0, NumberFormat.Decimal); break;
                 default: throw new Exception("Unknown operation");
             }
-
-            return true;
         }
 
         public IValue Resolve(IScope scope) {
-            IValue left, right;
-            if (this.left.GetValue(scope, out long value)) {
-                left = new Number(value, NumberFormat.Hex);
-            } else {
+            IValue left = (Number)this.left.GetValue(scope);
+            if(left == null)
                 left = this.left.Resolve(scope);
-            }
 
-            if (this.right.GetValue(scope, out value)) {
-                right = new Number(value, NumberFormat.Hex);
-            } else {
-                right = this.left.Resolve(scope);
-            }
+            IValue right = (Number)this.right.GetValue(scope);
+            if (right == null)
+                right = this.right.Resolve(scope);
 
             return new Expression(operation, left, right);
         }

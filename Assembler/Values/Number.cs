@@ -1,20 +1,21 @@
 ﻿using System;
 
 namespace Assembler.Values {
-    public class Number : IValue {
+    public class Number : IValue, IConstant {
         private readonly long value;
         private readonly NumberFormat format;
 
         public ValueType Type => ValueType.Number;
+
+        public long Value => value;
 
         public Number(long value, NumberFormat format) {
             this.value = value;
             this.format = format;
         }
 
-        public bool GetValue(IScope scope, out long value) {
-            value = this.value;
-            return true;
+        public IConstant GetValue(IScope scope) {
+            return this;
         }
 
         public IValue Resolve(IScope scope) {

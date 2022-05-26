@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace Assembler {
     public interface IScope {
-        IValue Get(string name);
+        IConstant Get(string name);
     }
 }

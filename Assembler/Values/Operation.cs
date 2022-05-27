@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler.Values {
+    /// <summary>
+    /// The operatuins that can be performed in an expression
+    /// </summary>
     public enum Operation {
         Add,
         Substract,
@@ -23,5 +26,6 @@ namespace Assembler.Values {
         LessOrEqual,
         GreaterOrEqual,
         Is,
+        Cast,
     }
 }

@@ -2,7 +2,7 @@
     /// <summary>
     /// A constant in the form of human readable values UTF-8
     /// </summary>
-    public class String : IValue, IConstant {
+    public class String : IConstant {
         private readonly string value;
 
         /// <summary>

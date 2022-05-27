@@ -4,7 +4,7 @@ namespace Assembler.Values {
     /// <summary>
     /// A representation of a numeric value within the assembly language
     /// </summary>
-    public class Number : IValue, IConstant {
+    public class Number : IConstant {
         private readonly long value;
         private readonly NumberFormat format;
 

@@ -8,6 +8,6 @@ namespace Assembler.Values {
     /// <summary>
     /// A constant is a value that can't be resolved any further
     /// </summary>
-    public interface IConstant {
+    public interface IConstant : IValue {
     }
 }

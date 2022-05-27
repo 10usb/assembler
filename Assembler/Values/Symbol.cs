@@ -20,7 +20,10 @@
         }
 
         public IConstant GetValue(IScope scope) {
-            return scope.Get(name);
+            IValue value = scope.Get(name);
+            if (value == null)
+                return null;
+            return value.GetValue(scope);
         }
 
         public IValue Resolve(IScope scope) {

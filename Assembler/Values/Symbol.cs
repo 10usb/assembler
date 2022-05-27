@@ -4,6 +4,12 @@
 
         public ValueType Type => ValueType.Symbol;
 
+        public string Name {
+            get {
+                return name;
+            }
+        }
+
         public Symbol(string name) {
             this.name = name;
         }

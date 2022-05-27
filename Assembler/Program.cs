@@ -24,7 +24,7 @@ namespace Assembler {
                     }
                 }
             } catch (AssemblerException e) {
-                Console.Error.WriteLine(e.Message, e.LineNr);
+                Console.Error.WriteLine("{0} on line {1}", e.Message, e.LineNr);
             }
 
             Console.ReadKey();

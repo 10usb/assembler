@@ -6,8 +6,6 @@ namespace Assembler.Values {
         private readonly IValue left;
         private readonly IValue right;
 
-        public ValueType Type => ValueType.Expression;
-
         public Expression(Operation operation, IValue left, IValue right) {
             this.operation = operation;
             this.left = left;

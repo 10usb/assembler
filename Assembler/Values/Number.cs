@@ -5,8 +5,6 @@ namespace Assembler.Values {
         private readonly long value;
         private readonly NumberFormat format;
 
-        public ValueType Type => ValueType.Number;
-
         public long Value => value;
 
         public Number(long value, NumberFormat format) {

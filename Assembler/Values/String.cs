@@ -2,8 +2,6 @@
     public class String : IValue, IConstant {
         private readonly string value;
 
-        public ValueType Type => ValueType.String;
-
         public string Text => value;
 
         public String(string value) {

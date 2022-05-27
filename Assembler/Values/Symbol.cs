@@ -1,8 +1,6 @@
 ﻿namespace Assembler.Values {
     public class Symbol : IValue {
-        private string name;
-
-        public ValueType Type => ValueType.Symbol;
+        private readonly string name;
 
         public string Name {
             get {

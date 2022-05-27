@@ -52,7 +52,9 @@
     <Compile Include="IScope.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="Processors\GlobalProcessor.cs" />
     <Compile Include="Processors\MacroProcessor.cs" />
+    <Compile Include="Processors\Processor.cs" />
     <Compile Include="ReferenceTable.cs" />
     <Compile Include="SymbolTable.cs" />
     <Compile Include="Values\Expression.cs" />

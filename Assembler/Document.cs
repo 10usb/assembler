@@ -1,4 +1,5 @@
-﻿using Assembler.Values;
+﻿using Assembler.Processors;
+using Assembler.Values;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,7 @@ namespace Assembler {
         private readonly SymbolTable symbolTable;
         private readonly VariableScope variableScope;
         private readonly Writer writer;
+        private Macro macros;
 
         public Document(FileInfo output) {
             referenceTable = new ReferenceTable();
@@ -70,6 +72,10 @@ namespace Assembler {
             //Console.WriteLine("Block close: {0}", line.IsBlockClose);
             //Console.WriteLine("Comments   : {0}", line.Comments);
             //Console.WriteLine("-----------------------------------------------");
+        }
+
+        public Macro AddMacro(string name, string[] arguments) {
+            return macros = new Macro(macros, name, arguments);
         }
 
         private void PutByte(AssemblyLine line, IScope scope) {

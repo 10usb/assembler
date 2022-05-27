@@ -1,4 +1,5 @@
-﻿using Assembler.Values;
+﻿using Assembler.Processors;
+using Assembler.Values;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,7 +18,7 @@ namespace Assembler {
 
             try {
                 using (Document document = new Document(output)) {
-                    Parser parser = new Parser(document);
+                    Parser parser = new Parser(new Processor(document));
 
                     using (StreamReader reader = source.OpenText()) {
                         parser.Parse(reader);

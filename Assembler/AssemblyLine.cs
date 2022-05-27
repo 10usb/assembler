@@ -72,7 +72,7 @@ namespace Assembler {
             }
 
             if (Comments != null) {
-                builder.AppendFormat("; {0}", Comments);
+                builder.Append(Comments);
             }
 
             return builder.ToString();

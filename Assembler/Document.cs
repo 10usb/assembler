@@ -41,6 +41,8 @@ namespace Assembler {
             Console.WriteLine(referenceTable);
             Console.WriteLine("----------------------------");
             Console.WriteLine(symbolTable);
+            Console.WriteLine("----------------------------");
+            Console.WriteLine(macros.ToString(true));
             writer.Dispose();
         }
 

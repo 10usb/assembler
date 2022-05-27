@@ -51,5 +51,29 @@ namespace Assembler {
 
             return null;
         }
+
+        public string ToString(bool table) {
+            StringBuilder builder = new StringBuilder();
+            if (table && parent != null) {
+                builder.AppendLine(parent.ToString(true));
+            }
+
+            builder.AppendLine(ToString());
+            return builder.ToString();
+        }
+
+        public override string ToString() {
+            StringBuilder builder = new StringBuilder();
+            builder.AppendFormat("macro {0}", name);
+            foreach (string argument in arguments)
+                builder.AppendFormat(" {0}", argument);
+
+            builder.AppendLine(" {");
+            foreach (AssemblyLine line in lines)
+                builder.AppendLine(line.ToString());
+
+            builder.AppendLine("}");
+            return builder.ToString();
+        }
     }
 }

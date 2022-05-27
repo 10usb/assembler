@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler.Values {
-    public interface IConstant {
+    /// <summary>
+    /// A constant is a value that can't be resolved any further
+    /// </summary>
+    public interface IConstant : IValue {
     }
 }

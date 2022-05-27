@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace Assembler {
     public class VariableScope : IScope {
-        private readonly Dictionary<string, IConstant> table;
+        private readonly Dictionary<string, IValue> table;
 
         public VariableScope() {
-            table = new Dictionary<string, IConstant>();
+            table = new Dictionary<string, IValue>();
         }
 
-        public IConstant Get(string name) {
+        public IValue Get(string name) {
             if (table.ContainsKey(name))
                 return table[name];
 
             return null;
         }
 
-        public void Set(string name, IConstant constant) {
+        public void Set(string name, IValue constant) {
             table[name] = constant;
         }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Assembler {
     public class VariableScope : IScope {
-        private Dictionary<string, IConstant> table;
+        private readonly Dictionary<string, IConstant> table;
 
         public VariableScope() {
             table = new Dictionary<string, IConstant>();

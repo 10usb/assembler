@@ -3,12 +3,13 @@ using System.Text;
 
 namespace Assembler {
     public class AssemblyLine {
+        private readonly int lineNr;
         private string label;
+        private string scope;
         private string assignment;
         private string modifier;
         private string instruction;
         private string comments;
-        private int lineNr;
 
         public AssemblyLine(int lineNr) {
             this.lineNr = lineNr;
@@ -38,6 +39,11 @@ namespace Assembler {
         public string Comments {
             get { return comments; }
             set { comments = string.IsNullOrWhiteSpace(value) ? null : value; }
+        }
+
+        public string Scope {
+            get { return scope; }
+            set { scope = string.IsNullOrWhiteSpace(value) ? null : value; }
         }
 
         public override string ToString() {

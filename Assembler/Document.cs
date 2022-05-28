@@ -77,9 +77,15 @@ namespace Assembler {
             //Console.WriteLine("-----------------------------------------------");
         }
 
-
         public Macro AddMacro(string name, string[] arguments) {
             return macros = new Macro(macros, name, arguments);
+        }
+
+        public Macro GetMacro(string name, int argumentCount) {
+            if (macros == null)
+                return null;
+
+            return macros.Find(name, argumentCount);
         }
 
         public bool AddReference(string label) {

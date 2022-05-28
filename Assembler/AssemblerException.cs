@@ -8,7 +8,8 @@ namespace Assembler {
     public class AssemblerException : Exception {
         public int LineNr { get; }
 
-        public AssemblerException(string message, int lineNr) : base(message) {
+        public AssemblerException(string message, int lineNr, params object[] arguments)
+            : base(string.Format(message, arguments)) {
             LineNr = lineNr;
         }
     }

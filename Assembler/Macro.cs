@@ -1,5 +1,6 @@
 ﻿using Assembler.Values;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,22 +10,24 @@ namespace Assembler {
     /// <summary>
     /// A template instruction containing a template of instructions
     /// </summary>
-    public class Macro {
+    public class Macro : IEnumerable<AssemblyLine> {
         private readonly Macro parent;
         private readonly string name;
-        private readonly string[] arguments;
+        private readonly string[] parameters;
         private readonly List<AssemblyLine> lines;
+
+        public string[] Parameters => parameters;
 
         /// <summary>
         /// Constructs an empty macro
         /// </summary>
         /// <param name="parent"></param>
         /// <param name="name"></param>
-        /// <param name="arguments"></param>
-        public Macro(Macro parent, string name, string[] arguments) {
+        /// <param name="parameters"></param>
+        public Macro(Macro parent, string name, string[] parameters) {
             this.parent = parent;
             this.name = name;
-            this.arguments = arguments;
+            this.parameters = parameters;
             lines = new List<AssemblyLine>();
         }
 
@@ -43,13 +46,21 @@ namespace Assembler {
         /// <param name="argumentCount"></param>
         /// <returns></returns>
         public Macro Find(string name, int argumentCount) {
-            if (this.name == name && arguments.Length == argumentCount)
+            if (this.name == name && parameters.Length == argumentCount)
                 return this;
 
             if (parent != null)
                 return parent.Find(name, argumentCount);
 
             return null;
+        }
+
+        public IEnumerator<AssemblyLine> GetEnumerator() {
+            return lines.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
         }
 
         public string ToString(bool table) {
@@ -65,7 +76,7 @@ namespace Assembler {
         public override string ToString() {
             StringBuilder builder = new StringBuilder();
             builder.AppendFormat("macro {0}", name);
-            foreach (string argument in arguments)
+            foreach (string argument in parameters)
                 builder.AppendFormat(" {0}", argument);
 
             builder.AppendLine(" {");

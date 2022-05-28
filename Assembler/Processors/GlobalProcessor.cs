@@ -28,6 +28,7 @@ namespace Assembler.Processors {
                     case "org": SetOrigin(line); break;
                     case "db": PutByte(line); break;
                     case "macro": StartMacro(line); return;
+                    default: ProcessInstruction(line); return;
                 }
             }
 
@@ -71,6 +72,15 @@ namespace Assembler.Processors {
 
             MacroProcessor macroProcessor = new MacroProcessor(macro, processor);
             processor.PushState(macroProcessor);
+        }
+
+        private void ProcessInstruction(AssemblyLine line) {
+            Macro macro = document.GetMacro(line.Instruction, line.Arguments.Length);
+            if (macro == null)
+                throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
+
+            MacroTranscriber transcriber = new MacroTranscriber(macro, document);
+            transcriber.Transcribe(line.Arguments);
         }
     }
 }

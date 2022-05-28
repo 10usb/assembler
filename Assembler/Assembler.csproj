@@ -51,6 +51,7 @@
     <Compile Include="IProcessor.cs" />
     <Compile Include="IScope.cs" />
     <Compile Include="Macro.cs" />
+    <Compile Include="MacroTranscriber.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Processors\GlobalProcessor.cs" />
     <Compile Include="Processors\MacroProcessor.cs" />

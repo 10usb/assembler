@@ -17,6 +17,8 @@ namespace Assembler.Processors {
         public void ProcessLine(AssemblyLine line) {
             if (line.IsBlockClose) {
                 processor.PopState();
+            } else if (line.Instruction == "if") {
+                throw new AssemblerException("Not yet supported", line.LineNumber);
             } else {
                 macro.Add(line);
             }

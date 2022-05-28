@@ -46,6 +46,7 @@ namespace Assembler {
             writer.Dispose();
         }
 
+
         public void ProcessLine(AssemblyLine line) {
             if (line.Label != null) {
                 if (!referenceTable.Add(line.Label, writer.Position))
@@ -76,8 +77,41 @@ namespace Assembler {
             //Console.WriteLine("-----------------------------------------------");
         }
 
+
         public Macro AddMacro(string name, string[] arguments) {
             return macros = new Macro(macros, name, arguments);
+        }
+
+        public bool AddReference(string label) {
+            return referenceTable.Add(label, writer.Position);
+        }
+
+        public void SetOrigin(long value) {
+            writer.Origin = value;
+        }
+
+        public void PutByte(IValue[] values) {
+            foreach (IValue value in values) {
+                IConstant constant = value as IConstant;
+
+                if (constant == null) {
+                    symbolTable.Add(writer.FileOffset, value);
+                    writer.WriteByte(0);
+                    continue;
+                }
+
+                if (constant is String text) {
+                    writer.WriteString(text.Text);
+                    continue;
+                }
+
+                if (constant is Number number) {
+                    writer.WriteByte(number.Value);
+                    continue;
+                }
+
+                throw new Exception("This shouldn't happen");
+            }
         }
 
         private void PutByte(AssemblyLine line, IScope scope) {

@@ -16,6 +16,8 @@ namespace Assembler {
         private readonly Writer writer;
         private Macro macros;
 
+        public long Position => writer.FileOffset;
+
         public Document(FileInfo output) {
             referenceTable = new ReferenceTable();
             symbolTable = new SymbolTable();
@@ -26,10 +28,10 @@ namespace Assembler {
         public void Dispose() {
             foreach (SymbolTable.Entry entry in symbolTable) {
                 IConstant value = entry.Reference.GetValue(referenceTable) as Number;
-                if(value == null)
+                if (value == null)
                     throw new AssemblerException(string.Format("Unknown symbol in '{0}'", entry.Reference), 0);
 
-                if(!(value is Number number))
+                if (!(value is Number number))
                     throw new AssemblerException("Invalid data type for symbol", 0);
 
                 writer.Seek(entry.Offset);
@@ -45,7 +47,6 @@ namespace Assembler {
             Console.WriteLine(macros.ToString(true));
             writer.Dispose();
         }
-
 
         public void ProcessLine(AssemblyLine line) {
             if (line.Label != null) {
@@ -144,7 +145,7 @@ namespace Assembler {
             if (line.Arguments == null || line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for org", line.LineNumber);
 
-            if(!(line.Arguments[0].GetValue(null) is Number number))
+            if (!(line.Arguments[0].GetValue(null) is Number number))
                 throw new AssemblerException("Can't resolve origin value", line.LineNumber);
 
             writer.Origin = number.Value;

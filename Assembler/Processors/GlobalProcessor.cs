@@ -79,7 +79,7 @@ namespace Assembler.Processors {
             if (macro == null)
                 throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
 
-            MacroTranscriber transcriber = new MacroTranscriber(macro, document);
+            MacroTranscriber transcriber = new MacroTranscriber(macro, document, document.Position);
             transcriber.Transcribe(line.Arguments.Select(arg => arg.Resolve(scope)).ToArray());
         }
     }

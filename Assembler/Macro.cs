@@ -15,6 +15,7 @@ namespace Assembler {
         private readonly string name;
         private readonly string[] parameters;
         private readonly List<AssemblyLine> lines;
+        private HashSet<string> labels;
 
         public string[] Parameters => parameters;
 
@@ -37,6 +38,14 @@ namespace Assembler {
         /// <param name="line"></param>
         public void Add(AssemblyLine line) {
             lines.Add(line);
+        }
+
+        public void SetLabels(string[] labels) {
+            this.labels = new HashSet<string>(labels);
+        }
+
+        public bool HasLabel(string name) {
+            return labels.Contains(name);
         }
 
         /// <summary>

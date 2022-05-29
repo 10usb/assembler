@@ -14,11 +14,22 @@ namespace Assembler.Processors {
         public Processor(Document document) {
             this.document = document;
             states = new Stack<IProcessor>();
-            current = new GlobalProcessor(this, document);
+            current = new GlobalProcessor(this, this.document);
         }
 
         public void ProcessLine(AssemblyLine line) {
             current.ProcessLine(line);
+
+            //Console.WriteLine("Label: {0}", line.Label);
+            //Console.WriteLine("Assignment: {0}", line.Assignment);
+            //Console.WriteLine("Modifier: {0}", line.Modifier);
+            //Console.WriteLine("Scope: {0}", line.Scope);
+            //Console.WriteLine("Instruction: {0}", line.Instruction);
+            //Console.WriteLine("Arguments: {0}", line.Arguments);
+            //Console.WriteLine("IsBlockOpen: {0}", line.IsBlockOpen);
+            //Console.WriteLine("IsBlockClose: {0}", line.IsBlockClose);
+            //Console.WriteLine("Comments: {0}", line.Comments);
+            //Console.WriteLine("------------------------------------");
         }
 
         public void PushState(IProcessor state) {

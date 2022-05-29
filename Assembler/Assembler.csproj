@@ -60,6 +60,7 @@
     <Compile Include="SymbolTable.cs" />
     <Compile Include="Values\Expression.cs" />
     <Compile Include="Values\IConstant.cs" />
+    <Compile Include="Values\Label.cs" />
     <Compile Include="Values\Operation.cs" />
     <Compile Include="Values\Number.cs" />
     <Compile Include="Values\NumberFormat.cs" />

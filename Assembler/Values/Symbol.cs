@@ -19,15 +19,27 @@
             this.name = name;
         }
 
-        public IConstant GetValue(IScope scope) {
+        public virtual IConstant GetValue(IScope scope) {
             IValue value = scope.Get(name);
             if (value == null)
                 return null;
+
             return value.GetValue(scope);
         }
 
-        public IValue Resolve(IScope scope) {
-            return this;
+        /// <summary>
+        /// If the symbol can be found in the current scope, it will
+        /// return the value of that. If it can't find it, it will assume
+        /// it's a label reference and solidify it state.
+        /// </summary>
+        /// <param name="scope"></param>
+        /// <returns></returns>
+        public virtual IValue Resolve(IScope scope) {
+            IValue value = scope.Get(name);
+            if (value == null)
+                return new Label(name);
+
+            return value.GetValue(scope);
         }
 
         public override string ToString() {

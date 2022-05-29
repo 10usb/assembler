@@ -76,6 +76,14 @@ namespace Assembler.Values {
             return new Expression(operation, left, right);
         }
 
+        public IValue Derive(Mutator mutator) {
+            IValue result = mutator(this);
+            if (result != null)
+                return result;
+
+            return new Expression(operation, left.Derive(mutator), right.Derive(mutator));
+        }
+
         /// <summary>
         /// Returns a string representation of this expression
         /// </summary>

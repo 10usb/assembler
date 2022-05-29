@@ -16,5 +16,13 @@
         /// <param name="scope"></param>
         /// <returns></returns>
         IValue Resolve(IScope scope);
+
+        /// <summary>
+        /// Makes a copy of the the current value, but allows mutator
+        /// to alter the state
+        /// </summary>
+        /// <param name="mutator"></param>
+        /// <returns></returns>
+        IValue Derive(Mutator mutator);
     }
 }

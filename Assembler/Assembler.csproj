@@ -51,13 +51,14 @@
     <Compile Include="IProcessor.cs" />
     <Compile Include="IScope.cs" />
     <Compile Include="Macro.cs" />
-    <Compile Include="MacroTranscriber.cs" />
+    <Compile Include="Processors\MacroTranscriber.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Processors\GlobalProcessor.cs" />
     <Compile Include="Processors\MacroProcessor.cs" />
     <Compile Include="Processors\Processor.cs" />
     <Compile Include="ReferenceTable.cs" />
     <Compile Include="SymbolTable.cs" />
+    <Compile Include="Values\Mutator.cs" />
     <Compile Include="Values\Expression.cs" />
     <Compile Include="Values\IConstant.cs" />
     <Compile Include="Values\Label.cs" />

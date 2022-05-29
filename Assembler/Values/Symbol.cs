@@ -46,6 +46,14 @@
             return value.Resolve(scope);
         }
 
+        public IValue Derive(Mutator mutator) {
+            IValue result = mutator(this);
+            if (result != null)
+                return result;
+
+            return this;
+        }
+
         public override string ToString() {
             return name;
         }

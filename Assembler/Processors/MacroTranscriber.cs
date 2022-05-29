@@ -64,7 +64,7 @@ namespace Assembler {
         }
 
         private void ProcessInstruction(AssemblyLine line) {
-            Macro macro = document.GetMacro(line.Instruction, line.Arguments.Length);
+            Macro macro = this.macro.Find(line.Instruction, line.Arguments.Length);
             if (macro == null)
                 throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
 

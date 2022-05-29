@@ -43,6 +43,14 @@ namespace Assembler.Values {
             return this;
         }
 
+        public IValue Derive(Mutator mutator) {
+            IValue result = mutator(this);
+            if (result != null)
+                return result;
+
+            return this;
+        }
+
         /// <summary>
         /// Prints the value of the number using the defined format
         /// </summary>

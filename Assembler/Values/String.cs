@@ -38,6 +38,14 @@
             return this;
         }
 
+        public IValue Derive(Mutator mutator) {
+            IValue result = mutator(this);
+            if (result != null)
+                return result;
+
+            return this;
+        }
+
         /// <summary>
         /// Returns an assembly formatted representation of this string
         /// </summary>

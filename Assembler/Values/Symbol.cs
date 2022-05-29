@@ -39,7 +39,11 @@
             if (value == null)
                 return new Label(name);
 
-            return value.GetValue(scope);
+            IConstant result = value.GetValue(scope);
+            if (result != null)
+                return result;
+
+            return value.Resolve(scope);
         }
 
         public override string ToString() {

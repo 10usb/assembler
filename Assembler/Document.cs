@@ -20,7 +20,7 @@ namespace Assembler {
             referenceTable = new ReferenceTable();
             symbolTable = new SymbolTable();
             variableScope = new VariableScope();
-            writer = new Writer(output.OpenWrite());
+            writer = new Writer(output.Open(FileMode.Create));
         }
 
         public void Dispose() {

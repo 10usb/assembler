@@ -33,12 +33,12 @@ namespace Assembler {
                 switch (line.Instruction) {
                     case "org": SetOrigin(line); break;
                     case "db": PutByte(line); break;
-                    ///default: ProcessInstruction(line); return;
+                    default: ProcessInstruction(line); return;
                 }
             }
 
             if (line.Assignment != null) {
-                //scope.Set(line.Assignment, line.Arguments[0].GetValue(scope));
+                scope.Set(line.Assignment, line.Arguments[0].Resolve(scope));
             }
             Console.WriteLine(line);
         }
@@ -61,6 +61,15 @@ namespace Assembler {
 
                 return argument.Resolve(scope);
             }).ToArray());
+        }
+
+        private void ProcessInstruction(AssemblyLine line) {
+            Macro macro = document.GetMacro(line.Instruction, line.Arguments.Length);
+            if (macro == null)
+                throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
+
+            MacroTranscriber transcriber = new MacroTranscriber(macro, document);
+            transcriber.Transcribe(line.Arguments.Select(arg => arg.Resolve(scope)).ToArray());
         }
     }
 }

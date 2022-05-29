@@ -33,7 +33,7 @@ namespace Assembler.Processors {
             }
 
             if (line.Assignment != null) {
-                scope.Set(line.Assignment, line.Arguments[0].GetValue(scope));
+                scope.Set(line.Assignment, line.Arguments[0].Resolve(scope));
             }
 
             Console.WriteLine(line);

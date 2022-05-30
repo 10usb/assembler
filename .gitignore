@@ -3,3 +3,4 @@
 /Assembler/bin
 desktop.ini
 Resources
+*.csproj.user

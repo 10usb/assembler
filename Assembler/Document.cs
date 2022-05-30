@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using String = Assembler.Values.String;
 
 namespace Assembler {
     public class Document : IProcessor, IDisposable {
@@ -107,8 +106,8 @@ namespace Assembler {
                     continue;
                 }
 
-                if (constant is String text) {
-                    writer.WriteString(text.Text);
+                if (constant is Text text) {
+                    writer.WriteString(text.Value);
                     continue;
                 }
 
@@ -125,8 +124,8 @@ namespace Assembler {
             foreach (IValue argument in line.Arguments) {
                 IConstant constant = argument.GetValue(scope);
 
-                if (constant is String strValue) {
-                    writer.WriteString(strValue.Text);
+                if (constant is Text text) {
+                    writer.WriteString(text.Value);
                     continue;
                 }
 

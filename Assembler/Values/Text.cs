@@ -2,19 +2,19 @@
     /// <summary>
     /// A constant in the form of human readable values UTF-8
     /// </summary>
-    public class String : IConstant {
+    public class Text : IConstant {
         private readonly string value;
 
         /// <summary>
         /// The value of the stringn
         /// </summary>
-        public string Text => value;
+        public string Value => value;
 
         /// <summary>
         /// Constructs a string object from a value
         /// </summary>
         /// <param name="value"></param>
-        public String(string value) {
+        public Text(string value) {
             this.value = value;
         }
 

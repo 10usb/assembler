@@ -87,7 +87,7 @@ namespace Assembler {
             }
 
             if (match.Groups[GROUP_STRING].Success)
-                return new Values.String(match.Groups[GROUP_STRING].Value.Replace("\"\"", "\""));
+                return new Text(match.Groups[GROUP_STRING].Value.Replace("\"\"", "\""));
 
             if (match.Groups[GROUP_EXPRESION].Success) {
                 string value = match.Groups[GROUP_EXPRESION].Value;

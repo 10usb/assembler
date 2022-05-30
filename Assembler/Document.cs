@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler {
-    public class Document : IProcessor, IDisposable {
+    public class Document : IDisposable {
         private readonly ReferenceTable referenceTable;
         private readonly SymbolTable symbolTable;
         private readonly VariableScope variableScope;
@@ -45,36 +45,6 @@ namespace Assembler {
             Console.WriteLine("----------------------------");
             Console.WriteLine(macros.ToString(true));
             writer.Dispose();
-        }
-
-        public void ProcessLine(AssemblyLine line) {
-            if (line.Label != null) {
-                if (!referenceTable.Add(line.Label, writer.Position))
-                    throw new AssemblerException("Duplicate label found", line.LineNumber);
-            }
-
-            if (line.Instruction != null) {
-                switch (line.Instruction) {
-                    case "org": SetOrigin(line); break;
-                    case "db": PutByte(line, variableScope); break;
-                }
-            }
-
-            if (line.Assignment != null) {
-                variableScope.Set(line.Assignment, line.Arguments[0].GetValue(variableScope));
-            }
-
-            Console.WriteLine(line);
-
-            //Console.WriteLine("Label      : {0}", line.Label);
-            //Console.WriteLine("Assignment : {0}", line.Assignment);
-            //Console.WriteLine("Modifier   : {0}", line.Modifier);
-            //Console.WriteLine("Instruction: {0}", line.Instruction);
-            //Console.WriteLine("Arguments  : {0}", line.Arguments);
-            //Console.WriteLine("Block open : {0}", line.IsBlockOpen);
-            //Console.WriteLine("Block close: {0}", line.IsBlockClose);
-            //Console.WriteLine("Comments   : {0}", line.Comments);
-            //Console.WriteLine("-----------------------------------------------");
         }
 
         public Macro AddMacro(string name, string[] arguments) {

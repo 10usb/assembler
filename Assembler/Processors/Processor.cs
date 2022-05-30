@@ -20,16 +20,16 @@ namespace Assembler.Processors {
         public void ProcessLine(AssemblyLine line) {
             current.ProcessLine(line);
 
-            //Console.WriteLine("Label: {0}", line.Label);
-            //Console.WriteLine("Assignment: {0}", line.Assignment);
-            //Console.WriteLine("Modifier: {0}", line.Modifier);
-            //Console.WriteLine("Scope: {0}", line.Scope);
+            //Console.WriteLine("Label      : {0}", line.Label);
+            //Console.WriteLine("Scope      : {0}", line.Scope);
+            //Console.WriteLine("Assignment : {0}", line.Assignment);
+            //Console.WriteLine("Modifier   : {0}", line.Modifier);
             //Console.WriteLine("Instruction: {0}", line.Instruction);
-            //Console.WriteLine("Arguments: {0}", line.Arguments);
-            //Console.WriteLine("IsBlockOpen: {0}", line.IsBlockOpen);
-            //Console.WriteLine("IsBlockClose: {0}", line.IsBlockClose);
-            //Console.WriteLine("Comments: {0}", line.Comments);
-            //Console.WriteLine("------------------------------------");
+            //Console.WriteLine("Arguments  : {0}", line.Arguments);
+            //Console.WriteLine("Block open : {0}", line.IsBlockOpen);
+            //Console.WriteLine("Block close: {0}", line.IsBlockClose);
+            //Console.WriteLine("Comments   : {0}", line.Comments);
+            //Console.WriteLine("-----------------------------------------------");
         }
 
         public void PushState(IProcessor state) {

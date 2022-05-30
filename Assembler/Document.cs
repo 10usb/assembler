@@ -1,5 +1,4 @@
-﻿using Assembler.Processors;
-using Assembler.Values;
+﻿using Assembler.Values;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,49 +7,46 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler {
+    /// <summary>
+    /// The class that represent the output in memory
+    /// </summary>
     public class Document : IDisposable {
         private readonly ReferenceTable referenceTable;
         private readonly SymbolTable symbolTable;
-        private readonly VariableScope variableScope;
         private readonly Writer writer;
         private Macro macros;
 
+        /// <summary>
+        /// The current position at writing the output file
+        /// </summary>
         public long Position => writer.FileOffset;
 
+        /// <summary>
+        /// Constructs a Documents and opens a stream to the output file
+        /// </summary>
+        /// <param name="output"></param>
         public Document(FileInfo output) {
             referenceTable = new ReferenceTable();
             symbolTable = new SymbolTable();
-            variableScope = new VariableScope();
             writer = new Writer(output.Open(FileMode.Create));
         }
 
-        public void Dispose() {
-            foreach (SymbolTable.Entry entry in symbolTable) {
-                IConstant value = entry.Reference.GetValue(referenceTable) as Number;
-                if (value == null)
-                    throw new AssemblerException(string.Format("Unknown symbol in '{0}'", entry.Reference), 0);
-
-                if (!(value is Number number))
-                    throw new AssemblerException("Invalid data type for symbol", 0);
-
-                writer.Seek(entry.Offset);
-                writer.SetByte(number.Value);
-            }
-
-
-            Console.WriteLine("----------------------------");
-            Console.WriteLine(referenceTable);
-            Console.WriteLine("----------------------------");
-            Console.WriteLine(symbolTable);
-            Console.WriteLine("----------------------------");
-            Console.WriteLine(macros.ToString(true));
-            writer.Dispose();
+        /// <summary>
+        /// Add a new macro to the list of defined macro's
+        /// </summary>
+        /// <param name="name">Name of the macro</param>
+        /// <param name="parameters">Names for the parameters</param>
+        /// <returns></returns>
+        public Macro AddMacro(string name, string[] parameters) {
+            return macros = new Macro(macros, name, parameters);
         }
 
-        public Macro AddMacro(string name, string[] arguments) {
-            return macros = new Macro(macros, name, arguments);
-        }
-
+        /// <summary>
+        /// Get the first macro that matches the pattern
+        /// </summary>
+        /// <param name="name">Name of the macro</param>
+        /// <param name="argumentCount">The number of arguments to accept</param>
+        /// <returns></returns>
         public Macro GetMacro(string name, int argumentCount) {
             if (macros == null)
                 return null;
@@ -58,14 +54,28 @@ namespace Assembler {
             return macros.Find(name, argumentCount);
         }
 
+        /// <summary>
+        /// Added a new label reference at the current pointint to the
+        /// current virtual position in the file
+        /// </summary>
+        /// <param name="label">Unique label to map it at</param>
+        /// <returns></returns>
         public bool AddReference(string label) {
             return referenceTable.Add(label, writer.Position);
         }
 
+        /// <summary>
+        /// Set the current virtual address offset
+        /// </summary>
+        /// <param name="value"></param>
         public void SetOrigin(long value) {
             writer.Origin = value;
         }
 
+        /// <summary>
+        /// Writes the values as bytes to output
+        /// </summary>
+        /// <param name="values"></param>
         public void PutByte(IValue[] values) {
             foreach (IValue value in values) {
                 IConstant constant = value as IConstant;
@@ -90,34 +100,34 @@ namespace Assembler {
             }
         }
 
-        private void PutByte(AssemblyLine line, IScope scope) {
-            foreach (IValue argument in line.Arguments) {
-                IConstant constant = argument.GetValue(scope);
+        /// <summary>
+        /// Makes sure the current in-memory changes are flushed to the output. This to make sure the
+        /// file is of complete length. Then is tries to resolve all the symbols.
+        /// </summary>
+        public void Dispose() {
+            writer.Flush();
 
-                if (constant is Text text) {
-                    writer.WriteString(text.Value);
-                    continue;
-                }
+            foreach (SymbolTable.Entry entry in symbolTable) {
+                IConstant value = entry.Reference.GetValue(referenceTable) as Number;
+                if (value == null)
+                    throw new AssemblerException(string.Format("Unknown symbol in '{0}'", entry.Reference), 0);
 
-                Number number = constant as Number;
-                if (constant == null) {
-                    symbolTable.Add(writer.FileOffset, argument.Resolve(scope));
+                if (!(value is Number number))
+                    throw new AssemblerException("Invalid data type for symbol", 0);
 
-                    writer.WriteByte(0);
-                } else {
-                    writer.WriteByte(number.Value);
-                }
+                writer.Seek(entry.Offset);
+                writer.SetByte(number.Value);
             }
-        }
 
-        private void SetOrigin(AssemblyLine line) {
-            if (line.Arguments == null || line.Arguments.Length != 1)
-                throw new AssemblerException("Unexpected argument count for org", line.LineNumber);
+            writer.Dispose();
 
-            if (!(line.Arguments[0].GetValue(null) is Number number))
-                throw new AssemblerException("Can't resolve origin value", line.LineNumber);
 
-            writer.Origin = number.Value;
+            Console.WriteLine("----------------------------");
+            Console.WriteLine(referenceTable);
+            Console.WriteLine("----------------------------");
+            Console.WriteLine(symbolTable);
+            Console.WriteLine("----------------------------");
+            //Console.WriteLine(macros.ToString(true));
         }
     }
 }

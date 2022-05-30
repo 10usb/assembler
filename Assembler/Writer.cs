@@ -63,6 +63,10 @@ namespace Assembler {
             stream.Write(data, 0, data.Length);
         }
 
+        public void Flush() {
+            stream.Flush();
+        }
+
         public void Dispose() {
             stream.Flush();
             stream.Close();

@@ -1,4 +1,4 @@
-﻿using Assembler;
+﻿using Assembler.Interperters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,15 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler.Processors {
-    public class Processor : IProcessor {
+    public class Processor : IInterperter {
         private readonly Document document;
-        private readonly Stack<IProcessor> states;
-        private IProcessor current;
+        private readonly Stack<IInterperter> states;
+        private IInterperter current;
 
         public Processor(Document document) {
             this.document = document;
-            states = new Stack<IProcessor>();
-            current = new GlobalProcessor(this, this.document);
+            states = new Stack<IInterperter>();
+            current = new GlobalInterperter(this, this.document);
         }
 
         public void ProcessLine(AssemblyLine line) {
@@ -32,7 +32,7 @@ namespace Assembler.Processors {
             //Console.WriteLine("-----------------------------------------------");
         }
 
-        public void PushState(IProcessor state) {
+        public void PushState(IInterperter state) {
             states.Push(current);
             current = state;
         }

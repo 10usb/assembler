@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Assembler.Interperters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler.Processors {
-    public class MacroProcessor : IProcessor {
+    public class MacroDefinitionInterperter : IInterperter {
         private readonly Macro macro;
         private readonly Processor processor;
         private readonly List<string> labels;
 
-        public MacroProcessor(Macro macro, Processor processor) {
+        public MacroDefinitionInterperter(Macro macro, Processor processor) {
             this.macro = macro;
             this.processor = processor;
             labels = new List<string>();

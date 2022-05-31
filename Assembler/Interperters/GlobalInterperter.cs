@@ -1,4 +1,5 @@
-﻿using Assembler.Values;
+﻿using Assembler.Interperters;
+using Assembler.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler.Processors {
-    public class GlobalProcessor : IProcessor {
+    public class GlobalInterperter : IInterperter {
         private readonly Processor processor;
         private readonly Document document;
         private readonly VariableScope scope;
 
-        public GlobalProcessor(Processor processor, Document document) {
+        public GlobalInterperter(Processor processor, Document document) {
             this.processor = processor;
             this.document = document;
             scope = new VariableScope();
@@ -70,7 +71,7 @@ namespace Assembler.Processors {
 
             Macro macro = document.AddMacro(lineArguments[0].Name, arguments);
 
-            MacroProcessor macroProcessor = new MacroProcessor(macro, processor);
+            MacroDefinitionInterperter macroProcessor = new MacroDefinitionInterperter(macro, processor);
             processor.PushState(macroProcessor);
         }
 

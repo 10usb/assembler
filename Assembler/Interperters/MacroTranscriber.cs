@@ -1,4 +1,5 @@
-﻿using Assembler.Values;
+﻿using Assembler.Interperters;
+using Assembler.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler {
-    public class MacroTranscriber : IProcessor {
+    public class MacroTranscriber : IInterperter {
         private readonly Macro macro;
         private readonly Document document;
         private readonly string prefix;

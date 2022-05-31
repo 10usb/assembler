@@ -1,4 +1,5 @@
-﻿using Assembler.Values;
+﻿using Assembler.Interperters;
+using Assembler.Values;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +13,7 @@ namespace Assembler {
         static readonly Regex linePattern = new Regex(@"^(?:\s*([a-zA-Z0-9]+):)?\s*(?:(?:(?:(?:(global|local|const)\s+)?([a-zA-Z0-9]+)\s*=|(?:([+\-&!*?$%=~}]+)\s*)?([a-zA-Z0-9]+))\s*(.*?)\s*({)?)|(}))?\s*(;.+)?$", RegexOptions.Compiled);
         static readonly Regex valueRegex = new Regex(@"^\s*(?:([1-9][0-9]*\b|0\b)|(0x[0-9a-fA-F]+\b)|(0[0-7]+\b)|([01]+b\b)|([a-zA-Z][a-zA-Z0-9]*)|""([^""]*(?:""""[^""]*)*)""|(((?<open>\()[^()]*)+([^()]*(?<-open>\)))+(?(open)(?!))))", RegexOptions.Compiled);
         static readonly Regex operatorRegex = new Regex(@"^\s*(<<|>>|>=|<=|!=|is|[+\-*/%|=\^<>&])\s*", RegexOptions.Compiled);
-        private IProcessor processor;
+        private IInterperter processor;
         const int GROUP_DECIMAL = 1;
         const int GROUP_HEX = 2;
         const int GROUP_OCTAL = 3;
@@ -21,7 +22,7 @@ namespace Assembler {
         const int GROUP_STRING = 6;
         const int GROUP_EXPRESION = 7;
 
-        public Parser(IProcessor processor) {
+        public Parser(IInterperter processor) {
             this.processor = processor;
         }
 

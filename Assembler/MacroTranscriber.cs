@@ -1,4 +1,4 @@
-﻿using Assembler.Interperters;
+﻿using Assembler.Interpreters;
 using Assembler.Values;
 using System;
 using System.Collections.Generic;
@@ -19,12 +19,12 @@ namespace Assembler {
         }
 
         public void Transcribe(IValue[] arguments) {
-            MacroInterperter interperter = new MacroInterperter(macro, document, prefix);
+            MacroInterpreter interpreter = new MacroInterpreter(macro, document, prefix);
 
-            interperter.SetParameters(arguments);
+            interpreter.SetParameters(arguments);
 
             foreach (AssemblyLine line in macro)
-                interperter.ProcessLine(line);
+                interpreter.Process(line);
         }
     }
 }

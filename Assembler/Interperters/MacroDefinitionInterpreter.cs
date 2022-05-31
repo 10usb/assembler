@@ -1,23 +1,22 @@
-﻿using Assembler.Interperters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Processors {
-    public class MacroDefinitionInterperter : IInterperter {
+namespace Assembler.Interpreters {
+    public class MacroDefinitionInterpreter : IInterpreter {
         private readonly Macro macro;
-        private readonly Processor processor;
+        private readonly Router processor;
         private readonly List<string> labels;
 
-        public MacroDefinitionInterperter(Macro macro, Processor processor) {
+        public MacroDefinitionInterpreter(Macro macro, Router processor) {
             this.macro = macro;
             this.processor = processor;
             labels = new List<string>();
         }
 
-        public void ProcessLine(AssemblyLine line) {
+        public void Process(AssemblyLine line) {
             if (line.Label != null) {
                 labels.Add(line.Label);
             }

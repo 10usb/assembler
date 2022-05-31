@@ -1,4 +1,4 @@
-﻿using Assembler.Interperters;
+﻿using Assembler.Interpreters;
 using Assembler.Values;
 using System;
 using System.Collections.Generic;
@@ -9,21 +9,23 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Assembler {
-    public class Parser {//
-        static readonly Regex linePattern = new Regex(@"^(?:\s*([a-zA-Z0-9]+):)?\s*(?:(?:(?:(?:(global|local|const)\s+)?([a-zA-Z0-9]+)\s*=|(?:([+\-&!*?$%=~}]+)\s*)?([a-zA-Z0-9]+))\s*(.*?)\s*({)?)|(}))?\s*(;.+)?$", RegexOptions.Compiled);
-        static readonly Regex valueRegex = new Regex(@"^\s*(?:([1-9][0-9]*\b|0\b)|(0x[0-9a-fA-F]+\b)|(0[0-7]+\b)|([01]+b\b)|([a-zA-Z][a-zA-Z0-9]*)|""([^""]*(?:""""[^""]*)*)""|(((?<open>\()[^()]*)+([^()]*(?<-open>\)))+(?(open)(?!))))", RegexOptions.Compiled);
-        static readonly Regex operatorRegex = new Regex(@"^\s*(<<|>>|>=|<=|!=|is|[+\-*/%|=\^<>&])\s*", RegexOptions.Compiled);
-        private IInterperter processor;
-        const int GROUP_DECIMAL = 1;
-        const int GROUP_HEX = 2;
-        const int GROUP_OCTAL = 3;
-        const int GROUP_BINARY = 4;
-        const int GROUP_SYMBOL = 5;
-        const int GROUP_STRING = 6;
-        const int GROUP_EXPRESION = 7;
+    public class Parser {
+        private static readonly Regex linePattern = new Regex(@"^(?:\s*([a-zA-Z0-9]+):)?\s*(?:(?:(?:(?:(global|local|const)\s+)?([a-zA-Z0-9]+)\s*=|(?:([+\-&!*?$%=~}]+)\s*)?([a-zA-Z0-9]+))\s*(.*?)\s*({)?)|(}))?\s*(;.+)?$", RegexOptions.Compiled);
+        private static readonly Regex valueRegex = new Regex(@"^\s*(?:([1-9][0-9]*\b|0\b)|(0x[0-9a-fA-F]+\b)|(0[0-7]+\b)|([01]+b\b)|([a-zA-Z][a-zA-Z0-9]*)|""([^""]*(?:""""[^""]*)*)""|(((?<open>\()[^()]*)+([^()]*(?<-open>\)))+(?(open)(?!))))", RegexOptions.Compiled);
+        private static readonly Regex operatorRegex = new Regex(@"^\s*(<<|>>|>=|<=|!=|is|[+\-*/%|=\^<>&])\s*", RegexOptions.Compiled);
 
-        public Parser(IInterperter processor) {
-            this.processor = processor;
+        private const int GROUP_DECIMAL = 1;
+        private const int GROUP_HEX = 2;
+        private const int GROUP_OCTAL = 3;
+        private const int GROUP_BINARY = 4;
+        private const int GROUP_SYMBOL = 5;
+        private const int GROUP_STRING = 6;
+        private const int GROUP_EXPRESION = 7;
+
+        private readonly IInterpreter interpreter;
+
+        public Parser(IInterpreter interpreter) {
+            this.interpreter = interpreter;
         }
 
         public void Parse(TextReader reader) {
@@ -51,7 +53,7 @@ namespace Assembler {
                     Comments = match.Groups[9].Value
                 };
 
-                processor.ProcessLine(assemblyLine);
+                interpreter.Process(assemblyLine);
 
                 lineNr++;
             }

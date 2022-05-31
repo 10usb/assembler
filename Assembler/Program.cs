@@ -1,4 +1,4 @@
-﻿using Assembler.Processors;
+﻿using Assembler.Interpreters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -77,12 +77,10 @@ namespace Assembler {
             if (output == null)
                 GenerateOutput();
 
+            using (StreamReader reader = source.OpenText())
             using (Document document = new Document(output)) {
-                Parser parser = new Parser(new Processor(document));
-
-                using (StreamReader reader = source.OpenText()) {
-                    parser.Parse(reader);
-                }
+                Parser parser = new Parser(new Router(document));
+                parser.Parse(reader);
             }
         }
     }

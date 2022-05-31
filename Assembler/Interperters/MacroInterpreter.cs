@@ -1,26 +1,33 @@
-﻿using Assembler.Interperters;
-using Assembler.Values;
+﻿using Assembler.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Processors {
-    public class GlobalInterperter : IInterperter {
-        private readonly Processor processor;
+namespace Assembler.Interpreters {
+    public class MacroInterpreter : IInterpreter {
+        private readonly Macro macro;
         private readonly Document document;
+        private readonly string prefix;
         private readonly VariableScope scope;
 
-        public GlobalInterperter(Processor processor, Document document) {
-            this.processor = processor;
+        public MacroInterpreter(Macro macro, Document document, string prefix) {
+            this.macro = macro;
             this.document = document;
+            this.prefix = prefix;
             scope = new VariableScope();
         }
 
-        public void ProcessLine(AssemblyLine line) {
+        public void SetParameters(IValue[] arguments) {
+            int index = 0;
+            foreach (string label in macro.Parameters)
+                scope.Set(label, arguments[index++]);
+        }
+
+        public void Process(AssemblyLine line) {
             if (line.Label != null) {
-                if (!document.AddReference(line.Label))
+                if (!document.AddReference(prefix + line.Label))
                     throw new AssemblerException("Duplicate label found", line.LineNumber);
             }
 
@@ -28,15 +35,18 @@ namespace Assembler.Processors {
                 switch (line.Instruction) {
                     case "org": SetOrigin(line); break;
                     case "db": PutByte(line); break;
-                    case "macro": StartMacro(line); return;
                     default: ProcessInstruction(line); return;
                 }
             }
 
             if (line.Assignment != null) {
-                scope.Set(line.Assignment, line.Arguments[0].Resolve(scope));
-            }
+                scope.Set(line.Assignment, line.Arguments[0].Resolve(scope).Derive(value => {
+                    if (value is Label symbol && macro.HasLabel(symbol.Name))
+                        return new Label(prefix + symbol.Name);
 
+                    return null;
+                }));
+            }
             Console.WriteLine(line);
         }
 
@@ -49,39 +59,34 @@ namespace Assembler.Processors {
 
             document.SetOrigin(number.Value);
         }
+
         private void PutByte(AssemblyLine line) {
             document.PutByte(line.Arguments.Select(argument => {
                 IConstant constant = argument.GetValue(scope);
                 if (constant != null)
                     return constant;
 
-                return argument.Resolve(scope);
+                return argument.Resolve(scope).Derive(value => {
+                    if (value is Label symbol && macro.HasLabel(symbol.Name))
+                        return new Label(prefix + symbol.Name);
+
+                    return null;
+                });
             }).ToArray());
         }
 
-        private void StartMacro(AssemblyLine line) {
-            if (!line.IsBlockOpen)
-                throw new AssemblerException("Invalid macro", line.LineNumber);
-
-            // The only arguments of a macro must of of symbol type
-            Symbol[] lineArguments = line.Arguments.Select(arg => arg as Symbol).ToArray();
-
-            // We need a string array of strings of the remaining
-            string[] arguments = lineArguments.Skip(1).Select(arg => arg.Name).ToArray();
-
-            Macro macro = document.AddMacro(lineArguments[0].Name, arguments);
-
-            MacroDefinitionInterperter macroProcessor = new MacroDefinitionInterperter(macro, processor);
-            processor.PushState(macroProcessor);
-        }
-
         private void ProcessInstruction(AssemblyLine line) {
-            Macro macro = document.GetMacro(line.Instruction, line.Arguments.Length);
+            Macro macro = this.macro.Find(line.Instruction, line.Arguments.Length);
             if (macro == null)
                 throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
 
             MacroTranscriber transcriber = new MacroTranscriber(macro, document, document.Position);
-            transcriber.Transcribe(line.Arguments.Select(arg => arg.Resolve(scope)).ToArray());
+            transcriber.Transcribe(line.Arguments.Select(arg => arg.Resolve(scope).Derive(value => {
+                if (value is Label symbol && this.macro.HasLabel(symbol.Name))
+                    return new Label(prefix + symbol.Name);
+
+                return null;
+            })).ToArray());
         }
     }
 }

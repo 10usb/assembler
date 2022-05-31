@@ -1,24 +1,32 @@
-﻿using Assembler.Interperters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler.Processors {
-    public class Processor : IInterperter {
+namespace Assembler.Interpreters {
+    /// <summary>
+    /// The router is the glue that passes the parsed lines to the currently
+    /// active interpreter. And keeps track of where to return to when an
+    /// interpreter has reached the end.
+    /// </summary>
+    public class Router : IInterpreter {
         private readonly Document document;
-        private readonly Stack<IInterperter> states;
-        private IInterperter current;
+        private readonly Stack<IInterpreter> states;
+        private IInterpreter current;
 
-        public Processor(Document document) {
+        /// <summary>
+        /// Construct a router with a document as it's target
+        /// </summary>
+        /// <param name="document"></param>
+        public Router(Document document) {
             this.document = document;
-            states = new Stack<IInterperter>();
-            current = new GlobalInterperter(this, this.document);
+            states = new Stack<IInterpreter>();
+            current = new GlobalInterpreter(this, this.document);
         }
 
-        public void ProcessLine(AssemblyLine line) {
-            current.ProcessLine(line);
+        public void Process(AssemblyLine line) {
+            current.Process(line);
 
             //Console.WriteLine("Label      : {0}", line.Label);
             //Console.WriteLine("Scope      : {0}", line.Scope);
@@ -32,10 +40,18 @@ namespace Assembler.Processors {
             //Console.WriteLine("-----------------------------------------------");
         }
 
-        public void PushState(IInterperter state) {
+        /// <summary>
+        /// Push a new interpreter as a new state for next line to proccess
+        /// </summary>
+        /// <param name="state"></param>
+        public void PushState(IInterpreter state) {
             states.Push(current);
             current = state;
         }
+
+        /// <summary>
+        /// Pop last state back as active state
+        /// </summary>
         public void PopState() {
             if (states.Count == 0)
                 throw new Exception("Corrupt processing state occured");

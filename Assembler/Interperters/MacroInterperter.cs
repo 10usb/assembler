@@ -1,34 +1,28 @@
-﻿using Assembler.Interperters;
-using Assembler.Values;
+﻿using Assembler.Values;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Assembler {
-    public class MacroTranscriber : IInterperter {
+namespace Assembler.Interperters {
+    public class MacroInterperter : IInterperter {
         private readonly Macro macro;
         private readonly Document document;
         private readonly string prefix;
-        private VariableScope scope;
+        private readonly VariableScope scope;
 
-        public MacroTranscriber(Macro macro, Document document, long offset) {
+        public MacroInterperter(Macro macro, Document document, string prefix) {
             this.macro = macro;
             this.document = document;
-
-            this.prefix = string.Format("${0:X4}_", offset);
+            this.prefix = prefix;
+            scope = new VariableScope();
         }
 
-        public void Transcribe(IValue[] arguments) {
-            scope = new VariableScope();
-
+        public void SetParameters(IValue[] arguments) {
             int index = 0;
             foreach (string label in macro.Parameters)
                 scope.Set(label, arguments[index++]);
-
-            foreach (AssemblyLine line in macro)
-                ProcessLine(line);
         }
 
         public void ProcessLine(AssemblyLine line) {

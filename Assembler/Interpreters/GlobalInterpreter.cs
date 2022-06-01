@@ -40,7 +40,7 @@ namespace Assembler.Interpreters {
         }
 
         private void SetOrigin(AssemblyLine line) {
-            if (line.Arguments == null || line.Arguments.Length != 1)
+            if (line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for org", line.LineNumber);
 
             if (!(line.Arguments[0].GetValue(null) is Number number))

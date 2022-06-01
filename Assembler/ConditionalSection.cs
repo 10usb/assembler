@@ -16,6 +16,8 @@ namespace Assembler {
         private readonly List<AssemblyLine> lines;
         private ConditionalSection next;
 
+        public IValue Condition => condition;
+
         public ConditionalSection Next {
             get => next;
             set {

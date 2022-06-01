@@ -10,6 +10,7 @@ namespace Assembler {
         private string modifier;
         private string instruction;
         private string comments;
+        private IValue[] arguments = new IValue[0];
 
         public AssemblyLine(int lineNr) {
             this.lineNr = lineNr;
@@ -33,7 +34,16 @@ namespace Assembler {
             get { return instruction; }
             set { instruction = string.IsNullOrWhiteSpace(value) ? null : value; }
         }
-        public IValue[] Arguments { get; set; }
+        public IValue[] Arguments {
+            get => arguments;
+            set {
+                if (value != null) {
+                    arguments = value;
+                } else {
+                    arguments = new IValue[0];
+                }
+            }
+        }
         public bool IsBlockOpen { get; set; }
         public bool IsBlockClose { get; set; }
         public string Comments {
@@ -65,7 +75,7 @@ namespace Assembler {
                 }
             }
 
-            if (Arguments!=null) {
+            if (Arguments != null) {
                 foreach (IValue argument in Arguments) {
                     builder.AppendFormat(" {0}", argument);
                 }

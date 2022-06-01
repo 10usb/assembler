@@ -45,11 +45,16 @@ namespace Assembler {
 
         public override string ToString() {
             StringBuilder builder = new StringBuilder();
-            builder.AppendFormat("section {0} {", condition);
+            builder.AppendFormat("section {0} {{\n", condition);
             foreach (AssemblyLine line in lines)
                 builder.AppendLine(line.ToString());
 
-            builder.AppendLine("}");
+            if (next != null) {
+                builder.AppendFormat("}} {0}", next);
+            } else {
+
+                builder.AppendLine("}");
+            }
             return builder.ToString();
         }
     }

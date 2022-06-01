@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Assembler.Interpreters {
     public class IfElseDefinitionInterpreter : IInterpreter {
         private ConditionalSection section;
-        private Router router;
+        private readonly Router router;
 
         public IfElseDefinitionInterpreter(ConditionalSection section, Router router) {
             this.section = section;

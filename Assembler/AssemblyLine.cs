@@ -93,6 +93,10 @@ namespace Assembler {
                 builder.Append(Comments);
             }
 
+            if (Section != null) {
+                builder.Append(Section);
+            }
+
             return builder.ToString();
         }
     }

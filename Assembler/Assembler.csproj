@@ -47,7 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblerException.cs" />
+    <Compile Include="ConditionalSectionTranscriber.cs" />
     <Compile Include="Document.cs" />
+    <Compile Include="Interpreters\IfElseDefinitionInterpreter.cs" />
     <Compile Include="Interpreters\IInterpreter.cs" />
     <Compile Include="Interpreters\MacroInterpreter.cs" />
     <Compile Include="IScope.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="Interpreters\MacroDefinitionInterpreter.cs" />
     <Compile Include="Interpreters\Router.cs" />
     <Compile Include="ReferenceTable.cs" />
+    <Compile Include="ConditionalSection.cs" />
     <Compile Include="SymbolTable.cs" />
     <Compile Include="Values\Mutator.cs" />
     <Compile Include="Values\Expression.cs" />

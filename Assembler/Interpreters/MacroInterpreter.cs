@@ -47,6 +47,11 @@ namespace Assembler.Interpreters {
                     return null;
                 }));
             }
+
+            if (line.Section != null) {
+                ProcessSection(line);
+            }
+
             Console.WriteLine(line);
         }
 
@@ -87,6 +92,11 @@ namespace Assembler.Interpreters {
 
                 return null;
             })).ToArray());
+        }
+
+        private void ProcessSection(AssemblyLine line) {
+            ConditionalSectionTranscriber transcriber = new ConditionalSectionTranscriber(prefix, scope, macro, this);
+            transcriber.Transcribe(line.Section);
         }
     }
 }

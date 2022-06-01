@@ -25,10 +25,27 @@ namespace Assembler.Interpreters {
                 macro.SetLabels(labels.ToArray());
                 processor.PopState();
             } else if (line.Instruction == "if") {
-                throw new AssemblerException("Not yet supported", line.LineNumber);
+                StartIfElse(line);
             } else {
                 macro.Add(line);
             }
+        }
+
+        private void StartIfElse(AssemblyLine line) {
+            if (line.Arguments.Length != 1)
+                throw new AssemblerException("An if requires one argument", line.LineNumber);
+
+            if (!line.IsBlockOpen)
+                throw new AssemblerException("Invalid macro", line.LineNumber);
+
+            ConditionalSection section = new ConditionalSection(line.Arguments[0]);
+
+            macro.Add(new AssemblyLine(line.LineNumber) {
+                Section = section
+            });
+
+            IfElseDefinitionInterpreter interpreter = new IfElseDefinitionInterpreter(section, processor);
+            processor.PushState(interpreter);
         }
     }
 }

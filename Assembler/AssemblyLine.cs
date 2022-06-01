@@ -56,6 +56,8 @@ namespace Assembler {
             set { scope = string.IsNullOrWhiteSpace(value) ? null : value; }
         }
 
+        public ConditionalSection Section { get; set; }
+
         public override string ToString() {
             StringBuilder builder = new StringBuilder();
             if (Label != null)
@@ -89,6 +91,10 @@ namespace Assembler {
 
             if (Comments != null) {
                 builder.Append(Comments);
+            }
+
+            if (Section != null) {
+                builder.Append(Section);
             }
 
             return builder.ToString();

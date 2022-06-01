@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AssemblerException.cs" />
     <Compile Include="Document.cs" />
+    <Compile Include="Interpreters\IfElseDefinitionInterpreter.cs" />
     <Compile Include="Interpreters\IInterpreter.cs" />
     <Compile Include="Interpreters\MacroInterpreter.cs" />
     <Compile Include="IScope.cs" />

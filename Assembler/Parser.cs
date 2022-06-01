@@ -22,6 +22,16 @@ namespace Assembler {
         private const int GROUP_STRING = 6;
         private const int GROUP_EXPRESION = 7;
 
+        private const int GROUP_LABEL = 1;
+        private const int GROUP_SCOPE = 2;
+        private const int GROUP_ASSIGNMENT = 3;
+        private const int GROUP_MODIFIER = 4;
+        private const int GROUP_INSTRUCTION = 5;
+        private const int GROUP_ARGUMENTS = 6;
+        private const int GROUP_BLOCKOPEN = 7;
+        private const int GROUP_BLOCKCLOSE = 8;
+        private const int GROUP_COMMENTS = 9;
+
         private readonly IInterpreter interpreter;
 
         public Parser(IInterpreter interpreter) {
@@ -38,19 +48,19 @@ namespace Assembler {
                     throw new AssemblerException("Unexpected syntax on line {0}", lineNr);
 
                 IValue[] arguments = null;
-                if (match.Groups[6].Value.Length > 0)
-                    arguments = ParseArguments(match.Groups[6].Value).ToArray();
+                if (match.Groups[GROUP_ARGUMENTS].Value.Length > 0)
+                    arguments = ParseArguments(match.Groups[GROUP_ARGUMENTS].Value).ToArray();
 
                 AssemblyLine assemblyLine = new AssemblyLine(lineNr) {
-                    Label = match.Groups[1].Value,
-                    Scope = match.Groups[2].Value,
-                    Assignment = match.Groups[3].Value,
-                    Modifier = match.Groups[4].Value,
-                    Instruction = match.Groups[5].Value,
+                    Label = match.Groups[GROUP_LABEL].Value,
+                    Scope = match.Groups[GROUP_SCOPE].Value,
+                    Assignment = match.Groups[GROUP_ASSIGNMENT].Value,
+                    Modifier = match.Groups[GROUP_MODIFIER].Value,
+                    Instruction = match.Groups[GROUP_INSTRUCTION].Value,
                     Arguments = arguments,
-                    IsBlockOpen = match.Groups[7].Value.Length > 0,
-                    IsBlockClose = match.Groups[8].Value.Length > 0,
-                    Comments = match.Groups[9].Value
+                    IsBlockOpen = match.Groups[GROUP_BLOCKOPEN].Value.Length > 0,
+                    IsBlockClose = match.Groups[GROUP_BLOCKCLOSE].Value.Length > 0,
+                    Comments = match.Groups[GROUP_COMMENTS].Value
                 };
 
                 interpreter.Process(assemblyLine);

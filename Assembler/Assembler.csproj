@@ -48,15 +48,15 @@
   <ItemGroup>
     <Compile Include="AssemblerException.cs" />
     <Compile Include="Document.cs" />
-    <Compile Include="Interperters\IInterpreter.cs" />
-    <Compile Include="Interperters\MacroInterpreter.cs" />
+    <Compile Include="Interpreters\IInterpreter.cs" />
+    <Compile Include="Interpreters\MacroInterpreter.cs" />
     <Compile Include="IScope.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="MacroTranscriber.cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="Interperters\GlobalInterpreter.cs" />
-    <Compile Include="Interperters\MacroDefinitionInterpreter.cs" />
-    <Compile Include="Interperters\Router.cs" />
+    <Compile Include="Interpreters\GlobalInterpreter.cs" />
+    <Compile Include="Interpreters\MacroDefinitionInterpreter.cs" />
+    <Compile Include="Interpreters\Router.cs" />
     <Compile Include="ReferenceTable.cs" />
     <Compile Include="SymbolTable.cs" />
     <Compile Include="Values\Mutator.cs" />

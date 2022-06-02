@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Values;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,10 @@ namespace Assembler.Interpreters {
             this.macro = macro;
             this.processor = processor;
             labels = new List<string>();
+        }
+
+        public IValue Translate(IValue value) {
+            throw new NotImplementedException();
         }
 
         public void Process(AssemblyLine line) {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Values;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,10 @@ namespace Assembler.Interpreters {
             this.document = document;
             states = new Stack<IInterpreter>();
             current = new GlobalInterpreter(this, this.document);
+        }
+
+        public IValue Translate(IValue value) {
+            throw new NotImplementedException();
         }
 
         public void Process(AssemblyLine line) {

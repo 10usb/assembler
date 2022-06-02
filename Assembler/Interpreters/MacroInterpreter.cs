@@ -19,6 +19,15 @@ namespace Assembler.Interpreters {
             scope = new VariableScope();
         }
 
+        public IValue Translate(IValue source) {
+            return source.Derive(value => {
+                if (value is Label symbol && macro.HasLabel(symbol.Name))
+                    return new Label(prefix + symbol.Name);
+
+                return null;
+            });
+        }
+
         public void SetParameters(IValue[] arguments) {
             int index = 0;
             foreach (string label in macro.Parameters)
@@ -40,12 +49,7 @@ namespace Assembler.Interpreters {
             }
 
             if (line.Assignment != null) {
-                scope.Set(line.Assignment, line.Arguments[0].Resolve(scope).Derive(value => {
-                    if (value is Label symbol && macro.HasLabel(symbol.Name))
-                        return new Label(prefix + symbol.Name);
-
-                    return null;
-                }));
+                scope.Set(line.Assignment, Translate(line.Arguments[0]).Resolve(scope));
             }
 
             if (line.Section != null) {
@@ -71,12 +75,7 @@ namespace Assembler.Interpreters {
                 if (constant != null)
                     return constant;
 
-                return argument.Resolve(scope).Derive(value => {
-                    if (value is Label symbol && macro.HasLabel(symbol.Name))
-                        return new Label(prefix + symbol.Name);
-
-                    return null;
-                });
+                return Translate(argument).Resolve(scope);
             }).ToArray());
         }
 
@@ -86,16 +85,11 @@ namespace Assembler.Interpreters {
                 throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
 
             MacroTranscriber transcriber = new MacroTranscriber(macro, document, document.Position);
-            transcriber.Transcribe(line.Arguments.Select(arg => arg.Resolve(scope).Derive(value => {
-                if (value is Label symbol && this.macro.HasLabel(symbol.Name))
-                    return new Label(prefix + symbol.Name);
-
-                return null;
-            })).ToArray());
+            transcriber.Transcribe(line.Arguments.Select(arg => Translate(arg).Resolve(scope)).ToArray());
         }
 
         private void ProcessSection(AssemblyLine line) {
-            ConditionalSectionTranscriber transcriber = new ConditionalSectionTranscriber(prefix, scope, macro, this);
+            ConditionalSectionTranscriber transcriber = new ConditionalSectionTranscriber(scope, this);
             transcriber.Transcribe(line.Section);
         }
     }

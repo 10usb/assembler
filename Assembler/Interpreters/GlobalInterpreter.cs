@@ -17,6 +17,10 @@ namespace Assembler.Interpreters {
             scope = new VariableScope();
         }
 
+        public IValue Translate(IValue value) {
+            return value;
+        }
+
         public void Process(AssemblyLine line) {
             if (line.Label != null) {
                 if (!document.AddReference(line.Label))

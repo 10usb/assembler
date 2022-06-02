@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assembler.Values;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,10 @@ namespace Assembler.Interpreters {
         public IfElseDefinitionInterpreter(ConditionalSection section, Router router) {
             this.section = section;
             this.router = router;
+        }
+
+        public IValue Translate(IValue value) {
+            throw new NotImplementedException();
         }
 
         public void Process(AssemblyLine line) {

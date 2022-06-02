@@ -8,15 +8,11 @@ using System.Threading.Tasks;
 
 namespace Assembler {
     public class ConditionalSectionTranscriber {
-        private readonly string prefix;
-        private readonly VariableScope scope;
-        private readonly Macro macro;
+        private readonly IScope scope;
         private readonly IInterpreter interpreter;
 
-        public ConditionalSectionTranscriber(string prefix, VariableScope scope, Macro macro, IInterpreter interpreter) {
-            this.prefix = prefix;
+        public ConditionalSectionTranscriber(IScope scope, IInterpreter interpreter) {
             this.scope = scope;
-            this.macro = macro;
             this.interpreter = interpreter;
         }
 
@@ -24,12 +20,7 @@ namespace Assembler {
             bool success = true;
 
             if (section.Condition != null) {
-                IConstant result = section.Condition.Resolve(scope).Derive(value => {
-                    if (value is Label symbol && macro.HasLabel(symbol.Name))
-                        return new Label(prefix + symbol.Name);
-
-                    return null;
-                }).GetValue(scope);
+                IConstant result = interpreter.Translate(section.Condition).GetValue(scope);
 
                 if (!(result is Number number))
                     throw new Exception("Failed to resolve condition");

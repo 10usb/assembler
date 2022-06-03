@@ -45,7 +45,7 @@ main:
 ```
 
 ## Still needs to be added
- - accessing global variables from within macro's
+ - build-in $ variables
  - defining enum types
  - include other files
  - direct import of other file contents as data

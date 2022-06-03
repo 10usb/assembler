@@ -10,10 +10,12 @@ namespace Assembler {
     /// <summary>
     /// The class that represent the output in memory
     /// </summary>
-    public class Document : IDisposable {
+    public class Document : IScope, IDisposable {
         private readonly ReferenceTable referenceTable;
         private readonly SymbolTable symbolTable;
         private readonly Writer writer;
+        private readonly VariableScope globalScope;
+        private readonly VariableScope constantScope;
         private Macro macros;
 
         /// <summary>
@@ -29,6 +31,28 @@ namespace Assembler {
             referenceTable = new ReferenceTable();
             symbolTable = new SymbolTable();
             writer = new Writer(output.Open(FileMode.Create));
+
+            globalScope = new VariableScope();
+            constantScope = new VariableScope();
+        }
+
+        public IValue Get(string name) {
+            IValue value = constantScope.Get(name);
+            if (value != null)
+                return value;
+
+            return globalScope.Get(name);
+        }
+
+        public void Set(ScopeType scopeType, string name, IValue value) {
+            if (constantScope.Get(name) != null)
+                throw new Exception(string.Format("Can't set '{0}' a constant value with this name already exists", name));
+
+            switch (scopeType) {
+                case ScopeType.Constant: constantScope.Set(name, value); break;
+                case ScopeType.Global: constantScope.Set(name, value); break;
+                default: throw new Exception("Can't set '{0}' of a unknown scope");
+            }
         }
 
         /// <summary>

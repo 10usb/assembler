@@ -10,13 +10,13 @@ namespace Assembler.Interpreters {
         private readonly Macro macro;
         private readonly Document document;
         private readonly string prefix;
-        private readonly VariableScope scope;
+        private readonly LocalScope scope;
 
         public MacroInterpreter(Macro macro, Document document, string prefix) {
             this.macro = macro;
             this.document = document;
             this.prefix = prefix;
-            scope = new VariableScope();
+            scope = new LocalScope(document);
         }
 
         public IValue Translate(IValue source) {
@@ -31,7 +31,7 @@ namespace Assembler.Interpreters {
         public void SetParameters(IValue[] arguments) {
             int index = 0;
             foreach (string label in macro.Parameters)
-                scope.Set(label, arguments[index++]);
+                scope.Set(ScopeType.Local, label, arguments[index++]);
         }
 
         public void Process(AssemblyLine line) {
@@ -49,7 +49,7 @@ namespace Assembler.Interpreters {
             }
 
             if (line.Assignment != null) {
-                scope.Set(line.Assignment, Translate(line.Arguments[0]).Resolve(scope));
+                scope.Set(line.Scope, line.Assignment, Translate(line.Arguments[0]).Resolve(scope));
             }
 
             if (line.Section != null) {

@@ -53,7 +53,7 @@ namespace Assembler {
 
                 AssemblyLine assemblyLine = new AssemblyLine(lineNr) {
                     Label = match.Groups[GROUP_LABEL].Value,
-                    Scope = match.Groups[GROUP_SCOPE].Value,
+                    Scope = GetScopeType(match.Groups[GROUP_SCOPE].Value, lineNr),
                     Assignment = match.Groups[GROUP_ASSIGNMENT].Value,
                     Modifier = match.Groups[GROUP_MODIFIER].Value,
                     Instruction = match.Groups[GROUP_INSTRUCTION].Value,
@@ -66,6 +66,16 @@ namespace Assembler {
                 interpreter.Process(assemblyLine);
 
                 lineNr++;
+            }
+        }
+
+        private ScopeType GetScopeType(string value, int lineNr) {
+            switch (value) {
+                case "global": return ScopeType.Global;
+                case "constant": return ScopeType.Constant;
+                case "local": return ScopeType.Local;
+                case "": return ScopeType.None;
+                default: throw new AssemblerException("Unexpected syntax on line {0}", lineNr);
             }
         }
 

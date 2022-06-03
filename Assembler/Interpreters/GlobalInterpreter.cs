@@ -9,12 +9,12 @@ namespace Assembler.Interpreters {
     public class GlobalInterpreter : IInterpreter {
         private readonly Router processor;
         private readonly Document document;
-        private readonly VariableScope scope;
+        private readonly LocalScope scope;
 
         public GlobalInterpreter(Router processor, Document document) {
             this.processor = processor;
             this.document = document;
-            scope = new VariableScope();
+            scope = new LocalScope(document);
         }
 
         public IValue Translate(IValue value) {
@@ -32,12 +32,12 @@ namespace Assembler.Interpreters {
                     case "org": SetOrigin(line); break;
                     case "db": PutByte(line); break;
                     case "macro": StartMacro(line); return;
-                    default: ProcessInstruction(line); return;
+                    default: ProcessInstruction(line); break;
                 }
             }
 
-            if (line.Assignment != null) {
-                scope.Set(line.Assignment, line.Arguments[0].Resolve(scope));
+            if (line.Assignment != null) { 
+                scope.Set(line.Scope, line.Assignment, line.Arguments[0].Resolve(scope));
             }
 
             Console.WriteLine(line);

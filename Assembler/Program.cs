@@ -23,6 +23,7 @@ namespace Assembler {
                 Console.Error.WriteLine("{0} on line {1}", e.Message, e.LineNr);
             } catch (Exception ex) {
                 Console.Error.WriteLine(ex.Message);
+                Console.Error.WriteLine(ex.StackTrace);
             }
 
             if (wait) Console.ReadKey();

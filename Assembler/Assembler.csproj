@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AssemblerException.cs" />
     <Compile Include="ConditionalSectionTranscriber.cs" />
+    <Compile Include="LocalScope.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Interpreters\IfElseDefinitionInterpreter.cs" />
     <Compile Include="Interpreters\IInterpreter.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Interpreters\Router.cs" />
     <Compile Include="ReferenceTable.cs" />
     <Compile Include="ConditionalSection.cs" />
+    <Compile Include="ScopeType.cs" />
     <Compile Include="SymbolTable.cs" />
     <Compile Include="Values\Mutator.cs" />
     <Compile Include="Values\Expression.cs" />

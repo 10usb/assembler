@@ -51,10 +51,7 @@ namespace Assembler {
             set { comments = string.IsNullOrWhiteSpace(value) ? null : value; }
         }
 
-        public string Scope {
-            get { return scope; }
-            set { scope = string.IsNullOrWhiteSpace(value) ? null : value; }
-        }
+        public ScopeType Scope { get; set; } = ScopeType.None;
 
         public ConditionalSection Section { get; set; }
 

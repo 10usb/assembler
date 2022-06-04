@@ -4,6 +4,11 @@
     /// </summary>
     public interface IValue {
         /// <summary>
+        /// The data type this value belongs to
+        /// </summary>
+        Kind Kind { get; }
+
+        /// <summary>
         /// Get the constant value
         /// </summary>
         /// <param name="scope"></param>
@@ -24,5 +29,12 @@
         /// <param name="mutator"></param>
         /// <returns></returns>
         IValue Derive(Mutator mutator);
+
+        /// <summary>
+        /// Make a copy of the current value and make it of the kind
+        /// </summary>
+        /// <param name="kind"></param>
+        /// <returns></returns>
+        IValue Cast(Kind kind);
     }
 }

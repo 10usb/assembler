@@ -14,8 +14,9 @@ namespace Assembler {
         private readonly ReferenceTable referenceTable;
         private readonly SymbolTable symbolTable;
         private readonly Writer writer;
-        private readonly VariableScope globalScope;
-        private readonly VariableScope constantScope;
+        private readonly VariableScope globals;
+        private readonly VariableScope constants;
+        private readonly VariableScope types;
         private Macro macros;
 
         /// <summary>
@@ -26,12 +27,14 @@ namespace Assembler {
         /// <summary>
         /// The global scope accessible from anywhere
         /// </summary>
-        public VariableScope Globals => globalScope;
+        public VariableScope Globals => globals;
 
         /// <summary>
         /// The constant scope is also global scope but variables can only be set once
         /// </summary>
-        public VariableScope Constants => constantScope;
+        public VariableScope Constants => constants;
+
+        public VariableScope Types => types;
 
         /// <summary>
         /// Constructs a Documents and opens a stream to the output file
@@ -42,8 +45,9 @@ namespace Assembler {
             symbolTable = new SymbolTable();
             writer = new Writer(output.Open(FileMode.Create));
 
-            globalScope = new VariableScope();
-            constantScope = new VariableScope();
+            globals = new VariableScope();
+            constants = new VariableScope();
+            types = new VariableScope();
         }
 
         /// <summary>
@@ -141,6 +145,12 @@ namespace Assembler {
             Console.WriteLine(referenceTable);
             Console.WriteLine("----------------------------");
             Console.WriteLine(symbolTable);
+            Console.WriteLine("----------------------------");
+            Console.WriteLine(types);
+            Console.WriteLine("----------------------------");
+            Console.WriteLine(constants);
+            Console.WriteLine("----------------------------");
+            Console.WriteLine(globals);
             Console.WriteLine("----------------------------");
             //Console.WriteLine(macros.ToString(true));
         }

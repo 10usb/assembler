@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Assembler.Interpreters {
     public class GlobalInterpreter : IInterpreter {
-        private readonly Router processor;
+        private readonly Router router;
         private readonly Document document;
         private readonly LocalScope scope;
 
-        public GlobalInterpreter(Router processor, Document document) {
-            this.processor = processor;
+        public GlobalInterpreter(Router router, Document document) {
+            this.router = router;
             this.document = document;
             scope = new LocalScope(document);
         }
@@ -32,6 +32,7 @@ namespace Assembler.Interpreters {
                     case "org": SetOrigin(line); break;
                     case "db": PutByte(line); break;
                     case "macro": StartMacro(line); return;
+                    case "enum": StartEnum(line); return;
                     default: ProcessInstruction(line); break;
                 }
             }
@@ -74,8 +75,23 @@ namespace Assembler.Interpreters {
 
             Macro macro = document.AddMacro(lineArguments[0].Name, arguments);
 
-            MacroDefinitionInterpreter macroProcessor = new MacroDefinitionInterpreter(macro, processor);
-            processor.PushState(macroProcessor);
+            MacroDefinitionInterpreter macroProcessor = new MacroDefinitionInterpreter(macro, router);
+            router.PushState(macroProcessor);
+        }
+
+        private void StartEnum(AssemblyLine line) {
+            string name = (line.Arguments[0] as Symbol).Name;
+
+            if (document.Types.Get(name) != null)
+                throw new AssemblerException("Type with name '{0}' already exists", line.LineNumber, name);
+
+            ClassType classType = new ClassType(name);
+
+            document.Types.Set(name, classType);
+
+            EnumInterpreter interpreter = new EnumInterpreter(classType, scope, router);
+            router.PushState(interpreter);
+
         }
 
         private void ProcessInstruction(AssemblyLine line) {

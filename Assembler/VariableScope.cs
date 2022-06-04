@@ -23,5 +23,15 @@ namespace Assembler {
         public void Set(string name, IValue constant) {
             table[name] = constant;
         }
+
+        public override string ToString() {
+            StringBuilder builder = new StringBuilder();
+
+            foreach (KeyValuePair<string, IValue> entry in table) {
+                builder.AppendFormat("{0} = {1}\n", entry.Key, entry.Value);
+            }
+
+            return builder.ToString();
+        }
     }
 }

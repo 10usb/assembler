@@ -7,6 +7,9 @@ namespace Assembler.Values {
     public class Number : IConstant {
         private readonly long value;
         private readonly NumberFormat format;
+        private ClassType classType;
+
+        public ClassType Class => classType;
 
         /// <summary>
         /// The internal long value used for storing the value
@@ -49,6 +52,12 @@ namespace Assembler.Values {
                 return result;
 
             return this;
+        }
+
+        public IValue Cast(ClassType classType) {
+            return new Number(value, format) {
+                classType = classType
+            };
         }
 
         /// <summary>

@@ -5,6 +5,9 @@
     /// </summary>
     public class Symbol : IValue {
         private readonly string name;
+        private ClassType classType;
+
+        public ClassType Class => classType;
 
         /// <summary>
         /// The name of the symbol
@@ -52,6 +55,12 @@
                 return result;
 
             return this;
+        }
+
+        public virtual IValue Cast(ClassType classType) {
+            return new Symbol(name) {
+                classType = classType
+            };
         }
 
         public override string ToString() {

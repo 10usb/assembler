@@ -71,6 +71,7 @@
     <Compile Include="Values\Operation.cs" />
     <Compile Include="Values\Number.cs" />
     <Compile Include="Values\NumberFormat.cs" />
+    <Compile Include="Values\ClassType.cs" />
     <Compile Include="Values\Text.cs" />
     <Compile Include="Values\Symbol.cs" />
     <Compile Include="AssemblyLine.cs" />

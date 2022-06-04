@@ -4,8 +4,10 @@
 
         public string Name => name;
 
-        public ClassType(string value) {
-            this.name = value;
+        public ClassType Class => throw new System.NotImplementedException();
+
+        public ClassType(string name) {
+            this.name = name;
         }
 
         public IConstant GetValue(IScope scope) {
@@ -22,6 +24,10 @@
                 return result;
 
             return this;
+        }
+
+        public IValue Cast(ClassType classType) {
+            throw new System.NotImplementedException();
         }
 
         public override string ToString() {

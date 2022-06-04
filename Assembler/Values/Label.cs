@@ -13,6 +13,10 @@ namespace Assembler.Values {
     /// a second time
     /// </summary>
     public class Label : Symbol {
+        private ClassType classType;
+
+        public ClassType Class => classType;
+
         public Label(string name) : base(name) {
         }
 
@@ -23,6 +27,12 @@ namespace Assembler.Values {
         /// <returns></returns>
         public override IValue Resolve(IScope scope) {
             return this;
+        }
+
+        public override IValue Cast(ClassType classType) {
+            return new Label(Name) {
+                classType = classType
+            };
         }
     }
 }

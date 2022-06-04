@@ -6,7 +6,7 @@
         /// <summary>
         /// The class type this value belongs to
         /// </summary>
-        ClassType ClassType { get; }
+        ClassType Class { get; }
 
         /// <summary>
         /// Get the constant value

@@ -9,6 +9,9 @@ namespace Assembler.Values {
         private readonly Operation operation;
         private readonly IValue left;
         private readonly IValue right;
+        private ClassType classType;
+
+        public ClassType Class => classType;
 
         /// <summary>
         /// Constructs an expression
@@ -100,6 +103,12 @@ namespace Assembler.Values {
                 return result;
 
             return new Expression(operation, left.Derive(mutator), right.Derive(mutator));
+        }
+
+        public IValue Cast(ClassType classType) {
+            return new Expression(operation, left, right) {
+                classType = classType
+            };
         }
 
         /// <summary>

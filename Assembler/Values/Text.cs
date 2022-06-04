@@ -4,6 +4,9 @@
     /// </summary>
     public class Text : IConstant {
         private readonly string value;
+        private ClassType classType;
+
+        public ClassType Class => classType;
 
         /// <summary>
         /// The value of the stringn
@@ -44,6 +47,12 @@
                 return result;
 
             return this;
+        }
+
+        public IValue Cast(ClassType classType) {
+            return new Text(value) {
+                classType = classType
+            };
         }
 
         /// <summary>

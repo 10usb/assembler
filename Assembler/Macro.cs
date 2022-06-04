@@ -17,7 +17,15 @@ namespace Assembler {
         private readonly List<AssemblyLine> lines;
         private HashSet<string> labels;
 
+        /// <summary>
+        /// The names of the parameters given to this macro
+        /// </summary>
         public string[] Parameters => parameters;
+
+        /// <summary>
+        /// The parent of this macro containings all macro's it can call
+        /// </summary>
+        public Macro Parent => parent;
 
         /// <summary>
         /// Constructs an empty macro

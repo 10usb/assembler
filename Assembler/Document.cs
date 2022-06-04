@@ -10,7 +10,7 @@ namespace Assembler {
     /// <summary>
     /// The class that represent the output in memory
     /// </summary>
-    public class Document : IScope, IDisposable {
+    public class Document : IDisposable {
         private readonly ReferenceTable referenceTable;
         private readonly SymbolTable symbolTable;
         private readonly Writer writer;
@@ -24,6 +24,16 @@ namespace Assembler {
         public long Position => writer.FileOffset;
 
         /// <summary>
+        /// The global scope accessible from anywhere
+        /// </summary>
+        public VariableScope Globals => globalScope;
+
+        /// <summary>
+        /// The constant scope is also global scope but variables can only be set once
+        /// </summary>
+        public VariableScope Constants => constantScope;
+
+        /// <summary>
         /// Constructs a Documents and opens a stream to the output file
         /// </summary>
         /// <param name="output"></param>
@@ -34,25 +44,6 @@ namespace Assembler {
 
             globalScope = new VariableScope();
             constantScope = new VariableScope();
-        }
-
-        public IValue Get(string name) {
-            IValue value = constantScope.Get(name);
-            if (value != null)
-                return value;
-
-            return globalScope.Get(name);
-        }
-
-        public void Set(ScopeType scopeType, string name, IValue value) {
-            if (constantScope.Get(name) != null)
-                throw new Exception(string.Format("Can't set '{0}' a constant value with this name already exists", name));
-
-            switch (scopeType) {
-                case ScopeType.Constant: constantScope.Set(name, value); break;
-                case ScopeType.Global: constantScope.Set(name, value); break;
-                default: throw new Exception("Can't set '{0}' of a unknown scope");
-            }
         }
 
         /// <summary>

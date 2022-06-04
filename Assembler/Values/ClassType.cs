@@ -1,10 +1,10 @@
 ﻿namespace Assembler.Values {
-    public class Kind : IConstant {
+    public class ClassType : IConstant {
         private readonly string name;
 
         public string Name => name;
 
-        public Kind(string value) {
+        public ClassType(string value) {
             this.name = value;
         }
 

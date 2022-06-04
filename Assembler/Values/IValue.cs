@@ -4,9 +4,9 @@
     /// </summary>
     public interface IValue {
         /// <summary>
-        /// The data type this value belongs to
+        /// The class type this value belongs to
         /// </summary>
-        Kind Kind { get; }
+        ClassType ClassType { get; }
 
         /// <summary>
         /// Get the constant value
@@ -33,8 +33,8 @@
         /// <summary>
         /// Make a copy of the current value and make it of the kind
         /// </summary>
-        /// <param name="kind"></param>
+        /// <param name="classType"></param>
         /// <returns></returns>
-        IValue Cast(Kind kind);
+        IValue Cast(ClassType classType);
     }
 }

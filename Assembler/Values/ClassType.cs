@@ -30,6 +30,19 @@
             throw new System.NotImplementedException();
         }
 
+        public bool Equals(ClassType other) {
+            if (other is null) return false;
+            return name == other.Name;
+        }
+
+
+        public override bool Equals(object obj) {
+            if (obj is ClassType classType)
+                return Equals(classType);
+
+            return false;
+        }
+
         public override string ToString() {
             return name;
         }

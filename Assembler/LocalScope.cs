@@ -21,7 +21,11 @@ namespace Assembler {
         /// <param name="name"></param>
         /// <returns></returns>
         public IValue Get(string name) {
-            IValue value = variables.Get(name);
+            IValue value = document.Types.Get(name);
+            if (value != null)
+                return value;
+
+            value = variables.Get(name);
             if (value != null)
                 return value;
 

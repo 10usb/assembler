@@ -38,7 +38,7 @@ namespace Assembler.Values {
                 return null;
 
             IValue right = this.right.GetValue(scope);
-            if (left == null)
+            if (right == null)
                 return null;
 
             if (left is Number && right is Number)
@@ -46,6 +46,14 @@ namespace Assembler.Values {
 
             if (left is Text && right is Text)
                 return Execute(left as Text, right as Text);
+
+            if (right is ClassType classType) {
+                switch (operation) {
+                    case Operation.Cast: return left.Cast(classType) as IConstant;
+                    case Operation.Is: return new Number(classType.Equals(left.Class) ? 1 : 0, NumberFormat.Decimal);
+                    default: throw new Exception("Unsupported operation");
+                }
+            }
 
             throw new Exception(string.Format("Can't perform the operation '{0}'. Both sides need to be of same type", this));
         }

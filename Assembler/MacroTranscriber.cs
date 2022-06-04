@@ -18,8 +18,10 @@ namespace Assembler {
             prefix = string.Format("${0:X4}_", offset);
         }
 
-        public void Transcribe(IValue[] arguments) {
+        public void Transcribe(string modifier, IValue[] arguments) {
             MacroInterpreter interpreter = new MacroInterpreter(macro, document, prefix);
+
+            interpreter.SetModifier(modifier);
 
             interpreter.SetParameters(arguments);
 

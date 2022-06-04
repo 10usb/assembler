@@ -28,6 +28,10 @@ namespace Assembler.Interpreters {
             });
         }
 
+        public void SetModifier(string modifier) {
+            scope.Set(ScopeType.Local, "$modifier", new Text(modifier ?? ""));
+        }
+
         public void SetParameters(IValue[] arguments) {
             int index = 0;
             foreach (string label in macro.Parameters)
@@ -85,7 +89,7 @@ namespace Assembler.Interpreters {
                 throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
 
             MacroTranscriber transcriber = new MacroTranscriber(macro, document, document.Position);
-            transcriber.Transcribe(line.Arguments.Select(arg => Translate(arg).Resolve(scope)).ToArray());
+            transcriber.Transcribe(line.Modifier, line.Arguments.Select(arg => Translate(arg).Resolve(scope)).ToArray());
         }
 
         private void ProcessSection(AssemblyLine line) {

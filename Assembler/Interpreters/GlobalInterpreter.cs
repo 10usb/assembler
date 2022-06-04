@@ -36,7 +36,7 @@ namespace Assembler.Interpreters {
                 }
             }
 
-            if (line.Assignment != null) { 
+            if (line.Assignment != null) {
                 scope.Set(line.Scope, line.Assignment, line.Arguments[0].Resolve(scope));
             }
 
@@ -84,7 +84,7 @@ namespace Assembler.Interpreters {
                 throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
 
             MacroTranscriber transcriber = new MacroTranscriber(macro, document, document.Position);
-            transcriber.Transcribe(line.Arguments.Select(arg => arg.Resolve(scope)).ToArray());
+            transcriber.Transcribe(line.Modifier, line.Arguments.Select(arg => arg.Resolve(scope)).ToArray());
         }
     }
 }

@@ -29,14 +29,25 @@ namespace Assembler.Values {
         /// <param name="scope"></param>
         /// <returns></returns>
         public IConstant GetValue(IScope scope) {
-            Number left = this.left.GetValue(scope) as Number;
+            // We first try to get left and right to see if thay can be resolve
+            IValue left = this.left.GetValue(scope);
             if (left == null)
                 return null;
 
-            Number right = this.right.GetValue(scope) as Number;
+            IValue right = this.right.GetValue(scope);
             if (left == null)
                 return null;
 
+            if (left is Number && right is Number)
+                return Execute(left as Number, right as Number);
+
+            if (left is Text && right is Text)
+                return Execute(left as Text, right as Text);
+
+            throw new Exception(string.Format("Can't perform the operation '{0}'. Both sides need to be of same type", this));
+        }
+
+        private IConstant Execute(Number left, Number right) {
             switch (operation) {
                 case Operation.Add: return new Number(left.Value + right.Value, NumberFormat.Decimal);
                 case Operation.Substract: return new Number(left.Value - right.Value, NumberFormat.Decimal);
@@ -54,7 +65,14 @@ namespace Assembler.Values {
                 case Operation.NotEqual: return new Number(left.Value != right.Value ? 1 : 0, NumberFormat.Decimal);
                 case Operation.LessOrEqual: return new Number(left.Value <= right.Value ? 1 : 0, NumberFormat.Decimal);
                 case Operation.GreaterOrEqual: return new Number(left.Value >= right.Value ? 1 : 0, NumberFormat.Decimal);
-                default: throw new Exception("Unknown operation");
+                default: throw new Exception("Unsupported operation");
+            }
+        }
+
+        private IConstant Execute(Text left, Text right) {
+            switch (operation) {
+                case Operation.Equal: return new Number(left.Value == right.Value ? 1 : 0, NumberFormat.Decimal);
+                default: throw new Exception("Unsupported operation");
             }
         }
 

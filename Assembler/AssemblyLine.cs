@@ -1,4 +1,5 @@
 ﻿using Assembler.Values;
+using System.IO;
 using System.Text;
 
 namespace Assembler {
@@ -8,6 +9,7 @@ namespace Assembler {
     /// to the interpreters.
     /// </summary>
     public class AssemblyLine {
+        private readonly FileInfo source;
         private readonly int lineNr;
         private string label;
         private string assignment;
@@ -20,14 +22,20 @@ namespace Assembler {
         /// TODO add source file reference
         /// </summary>
         /// <param name="lineNr"></param>
-        public AssemblyLine(int lineNr) {
+        public AssemblyLine(FileInfo source, int lineNr) {
+            this.source = source;
             this.lineNr = lineNr;
         }
 
         /// <summary>
+        /// The the source file this line is from
+        /// </summary>
+        public FileInfo Source => source;
+
+        /// <summary>
         /// The line number in the source file this assembly line was found
         /// </summary>
-        public int LineNumber { get => lineNr; }
+        public int LineNumber => lineNr;
 
         /// <summary>
         /// The label name is defined

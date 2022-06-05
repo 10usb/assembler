@@ -32,9 +32,11 @@ namespace Assembler {
         private const int GROUP_BLOCKCLOSE = 8;
         private const int GROUP_COMMENTS = 9;
 
+        private readonly FileInfo source;
         private readonly IInterpreter interpreter;
 
-        public Parser(IInterpreter interpreter) {
+        public Parser(FileInfo source, IInterpreter interpreter) {
+            this.source = source;
             this.interpreter = interpreter;
         }
 
@@ -51,7 +53,7 @@ namespace Assembler {
                 if (match.Groups[GROUP_ARGUMENTS].Value.Length > 0)
                     arguments = ParseArguments(match.Groups[GROUP_ARGUMENTS].Value).ToArray();
 
-                AssemblyLine assemblyLine = new AssemblyLine(lineNr) {
+                AssemblyLine assemblyLine = new AssemblyLine(source, lineNr) {
                     Label = match.Groups[GROUP_LABEL].Value,
                     Scope = GetScopeType(match.Groups[GROUP_SCOPE].Value, lineNr),
                     Assignment = match.Groups[GROUP_ASSIGNMENT].Value,

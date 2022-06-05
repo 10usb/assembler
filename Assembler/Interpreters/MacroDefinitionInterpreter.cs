@@ -45,7 +45,7 @@ namespace Assembler.Interpreters {
 
             ConditionalSection section = new ConditionalSection(line.Arguments[0]);
 
-            macro.Add(new AssemblyLine(line.LineNumber) {
+            macro.Add(new AssemblyLine(line.Source, line.LineNumber) {
                 Section = section
             });
 

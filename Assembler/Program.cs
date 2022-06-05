@@ -70,7 +70,7 @@ namespace Assembler {
         }
 
         private static void GenerateOutput() {
-            string filename = source.Name.Substring(0, source.Name.Length - source.Extension.Length) + ".o";
+            string filename = Path.ChangeExtension(source.Name, ".0");
             output = new FileInfo(Path.Combine(source.DirectoryName, filename));
         }
 
@@ -80,7 +80,7 @@ namespace Assembler {
 
             using (StreamReader reader = source.OpenText())
             using (Document document = new Document(output)) {
-                Parser parser = new Parser(new Router(document));
+                Parser parser = new Parser(source, new Router(document));
                 parser.Parse(reader);
             }
         }

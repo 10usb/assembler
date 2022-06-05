@@ -125,10 +125,12 @@ namespace Assembler.Interpreters {
             if (!(line.Arguments[0] is Text text))
                 throw new AssemblerException("Argument must be a string", line.LineNumber);
 
-            FileInfo file = new FileInfo(text.Value);
+            string path = Path.Combine(line.Source.Directory.FullName, text.Value);
+
+            FileInfo file = new FileInfo(path);
 
             using (StreamReader reader = file.OpenText()) {
-                Parser parser = new Parser(router);
+                Parser parser = new Parser(file, router);
                 parser.Parse(reader);
             }
         }

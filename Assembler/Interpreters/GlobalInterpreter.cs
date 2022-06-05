@@ -31,6 +31,7 @@ namespace Assembler.Interpreters {
                 switch (line.Instruction) {
                     case "org": SetOrigin(line); break;
                     case "db": PutByte(line); break;
+                    case "throw": throw Throw(line);
                     case "macro": StartMacro(line); return;
                     case "enum": StartEnum(line); return;
                     default: ProcessInstruction(line); break;
@@ -61,6 +62,17 @@ namespace Assembler.Interpreters {
 
                 return argument.Resolve(scope);
             }).ToArray());
+        }
+
+        private Exception Throw(AssemblyLine line) {
+            if (line.Arguments.Length != 1)
+                throw new AssemblerException("Unexpected argument count for throw", line.LineNumber);
+
+            IConstant constant = line.Arguments[0].GetValue(scope);
+            if (!(constant is Text message))
+                throw new AssemblerException("Unexpected argument type for throw", line.LineNumber);
+
+            return new AssemblerException(message.Value, line.LineNumber);
         }
 
         private void StartMacro(AssemblyLine line) {

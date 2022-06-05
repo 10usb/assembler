@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler.Interpreters {
-    public class GlobalInterpreter : IInterpreter {
+    public class GlobalInterpreter : BaseInterpreter {
         private readonly Router router;
-        private readonly Document document;
-        private readonly LocalScope scope;
+
+        protected override ScopeType DefaultScope => ScopeType.Global;
 
         public GlobalInterpreter(Router router, Document document) {
             this.router = router;
@@ -18,67 +18,7 @@ namespace Assembler.Interpreters {
             scope = new LocalScope(document);
         }
 
-        public IValue Translate(IValue value) {
-            return value;
-        }
-
-        public void Process(AssemblyLine line) {
-            if (line.Label != null) {
-                if (!document.AddReference(line.Label))
-                    throw new AssemblerException("Duplicate label found", line.LineNumber);
-            }
-
-            if (line.Instruction != null) {
-                switch (line.Instruction) {
-                    case "org": SetOrigin(line); break;
-                    case "db": PutByte(line); break;
-                    case "throw": throw Throw(line);
-                    case "macro": StartMacro(line); return;
-                    case "enum": StartEnum(line); return;
-                    case "include": StartInclude(line); return;
-                    default: ProcessInstruction(line); break;
-                }
-            }
-
-            if (line.Assignment != null) {
-                ScopeType scopeType = line.Scope != ScopeType.None ? line.Scope : ScopeType.Global;
-                scope.Set(scopeType, line.Assignment, line.Arguments[0].Resolve(scope));
-            }
-
-            Console.WriteLine(line);
-        }
-
-        private void SetOrigin(AssemblyLine line) {
-            if (line.Arguments.Length != 1)
-                throw new AssemblerException("Unexpected argument count for org", line.LineNumber);
-
-            if (!(line.Arguments[0].GetValue(null) is Number number))
-                throw new AssemblerException("Can't resolve origin value", line.LineNumber);
-
-            document.SetOrigin(number.Value);
-        }
-        private void PutByte(AssemblyLine line) {
-            document.PutByte(line.Arguments.Select(argument => {
-                IConstant constant = argument.GetValue(scope);
-                if (constant != null)
-                    return constant;
-
-                return argument.Resolve(scope);
-            }).ToArray());
-        }
-
-        private Exception Throw(AssemblyLine line) {
-            if (line.Arguments.Length != 1)
-                throw new AssemblerException("Unexpected argument count for throw", line.LineNumber);
-
-            IConstant constant = line.Arguments[0].GetValue(scope);
-            if (!(constant is Text message))
-                throw new AssemblerException("Unexpected argument type for throw", line.LineNumber);
-
-            return new AssemblerException(message.Value, line.LineNumber);
-        }
-
-        private void StartMacro(AssemblyLine line) {
+        protected override void StartMacro(AssemblyLine line) {
             if (!line.IsBlockOpen)
                 throw new AssemblerException("Invalid macro", line.LineNumber);
 
@@ -94,7 +34,7 @@ namespace Assembler.Interpreters {
             router.PushState(macroProcessor);
         }
 
-        private void StartEnum(AssemblyLine line) {
+        protected override void StartEnum(AssemblyLine line) {
             string name = (line.Arguments[0] as Symbol).Name;
 
             if (document.Types.Get(name) != null)
@@ -109,7 +49,7 @@ namespace Assembler.Interpreters {
 
         }
 
-        private void ProcessInstruction(AssemblyLine line) {
+        protected override void ProcessInstruction(AssemblyLine line) {
             Macro macro = document.GetMacro(line.Instruction, line.Arguments.Length);
             if (macro == null)
                 throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
@@ -118,7 +58,7 @@ namespace Assembler.Interpreters {
             transcriber.Transcribe(line.Modifier, line.Arguments.Select(arg => arg.Resolve(scope)).ToArray());
         }
 
-        private void StartInclude(AssemblyLine line) {
+        protected override void StartInclude(AssemblyLine line) {
             if (line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for include", line.LineNumber);
 
@@ -133,6 +73,10 @@ namespace Assembler.Interpreters {
                 Parser parser = new Parser(file, router);
                 parser.Parse(reader);
             }
+        }
+
+        protected override void ProcessSection(AssemblyLine line) {
+            throw new NotImplementedException();
         }
     }
 }

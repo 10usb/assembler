@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AssemblerException.cs" />
     <Compile Include="ConditionalSectionTranscriber.cs" />
+    <Compile Include="Interpreters\BaseInterpreter.cs" />
     <Compile Include="Interpreters\EnumInterpreter.cs" />
     <Compile Include="LocalScope.cs" />
     <Compile Include="Document.cs" />

@@ -70,7 +70,7 @@ namespace Assembler {
         }
 
         private static void GenerateOutput() {
-            string filename = Path.ChangeExtension(source.Name, ".0");
+            string filename = Path.ChangeExtension(source.Name, ".o");
             output = new FileInfo(Path.Combine(source.DirectoryName, filename));
         }
 

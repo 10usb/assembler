@@ -11,6 +11,7 @@ namespace Assembler.Interpreters {
         private readonly Document document;
         private readonly string prefix;
         private readonly LocalScope scope;
+        private string modifier;
 
         public MacroInterpreter(Macro macro, Document document, string prefix) {
             this.macro = macro;
@@ -29,6 +30,7 @@ namespace Assembler.Interpreters {
         }
 
         public void SetModifier(string modifier) {
+            this.modifier = modifier;
             scope.Set(ScopeType.Local, "$modifier", new Text(modifier ?? ""));
         }
 
@@ -102,7 +104,10 @@ namespace Assembler.Interpreters {
                 throw new AssemblerException("Unknown instruction '{0}'", line.LineNumber, line.Instruction);
 
             MacroTranscriber transcriber = new MacroTranscriber(macro, document, document.Position);
-            transcriber.Transcribe(line.Modifier, line.Arguments.Select(arg => Translate(arg).Resolve(scope)).ToArray());
+
+            string modifier = line.Modifier == "$&" ? this.modifier : line.Modifier;
+
+            transcriber.Transcribe(modifier, line.Arguments.Select(arg => Translate(arg).Resolve(scope)).ToArray());
         }
 
         private void ProcessSection(AssemblyLine line) {

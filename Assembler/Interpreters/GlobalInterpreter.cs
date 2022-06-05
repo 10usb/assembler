@@ -1,6 +1,7 @@
 ﻿using Assembler.Values;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ namespace Assembler.Interpreters {
                     case "throw": throw Throw(line);
                     case "macro": StartMacro(line); return;
                     case "enum": StartEnum(line); return;
+                    case "include": StartInclude(line); return;
                     default: ProcessInstruction(line); break;
                 }
             }
@@ -114,6 +116,21 @@ namespace Assembler.Interpreters {
 
             MacroTranscriber transcriber = new MacroTranscriber(macro, document, document.Position);
             transcriber.Transcribe(line.Modifier, line.Arguments.Select(arg => arg.Resolve(scope)).ToArray());
+        }
+
+        private void StartInclude(AssemblyLine line) {
+            if (line.Arguments.Length != 1)
+                throw new AssemblerException("Unexpected argument count for include", line.LineNumber);
+
+            if (!(line.Arguments[0] is Text text))
+                throw new AssemblerException("Argument must be a string", line.LineNumber);
+
+            FileInfo file = new FileInfo(text.Value);
+
+            using (StreamReader reader = file.OpenText()) {
+                Parser parser = new Parser(router);
+                parser.Parse(reader);
+            }
         }
     }
 }

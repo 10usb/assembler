@@ -29,6 +29,8 @@ namespace Assembler.Interpreters {
                 scope.Set(ScopeType.Constant, line.Assignment, line.Arguments[0].Resolve(scope).Cast(classType));
             } else if (line.IsBlockClose) {
                 router.PopState();
+            } else if(!line.IsEmptyOrComment) {
+                throw new AssemblerException("Unexpected token inside enum '{0}'", line.LineNumber, classType);
             }
         }
     }

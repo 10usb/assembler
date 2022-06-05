@@ -141,18 +141,16 @@ namespace Assembler {
             writer.Dispose();
 
 
-            Console.WriteLine("----------------------------");
-            Console.WriteLine(referenceTable);
-            Console.WriteLine("----------------------------");
-            Console.WriteLine(symbolTable);
-            Console.WriteLine("----------------------------");
-            Console.WriteLine(types);
-            Console.WriteLine("----------------------------");
-            Console.WriteLine(constants);
-            Console.WriteLine("----------------------------");
+            Console.WriteLine("-------- References --------");
+            Console.Write(referenceTable);
+            Console.WriteLine("-------- Symbols -----------");
+            Console.Write(symbolTable);
+            Console.WriteLine("-------- Types -------------");
+            Console.Write(types);
+            Console.WriteLine("-------- Constants ---------");
+            Console.Write(constants);
+            Console.WriteLine("-------- Globals -----------");
             Console.WriteLine(globals);
-            Console.WriteLine("----------------------------");
-            //Console.WriteLine(macros.ToString(true));
         }
     }
 }

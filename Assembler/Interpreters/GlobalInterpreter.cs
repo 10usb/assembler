@@ -39,7 +39,8 @@ namespace Assembler.Interpreters {
             }
 
             if (line.Assignment != null) {
-                scope.Set(line.Scope, line.Assignment, line.Arguments[0].Resolve(scope));
+                ScopeType scopeType = line.Scope != ScopeType.None ? line.Scope : ScopeType.Global;
+                scope.Set(scopeType, line.Assignment, line.Arguments[0].Resolve(scope));
             }
 
             Console.WriteLine(line);

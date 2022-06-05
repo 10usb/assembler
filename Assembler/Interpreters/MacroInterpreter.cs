@@ -54,7 +54,8 @@ namespace Assembler.Interpreters {
             }
 
             if (line.Assignment != null) {
-                scope.Set(line.Scope, line.Assignment, Translate(line.Arguments[0]).Resolve(scope));
+                ScopeType scopeType = line.Scope != ScopeType.None ? line.Scope : ScopeType.Local;
+                scope.Set(scopeType, line.Assignment, Translate(line.Arguments[0]).Resolve(scope));
             }
 
             if (line.Section != null) {

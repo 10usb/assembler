@@ -63,8 +63,6 @@ namespace Assembler.Interpreters {
             if (line.Section != null) {
                 ProcessSection(line);
             }
-
-            Console.WriteLine(line);
         }
 
         private void SetOrigin(AssemblyLine line) {

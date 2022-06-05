@@ -103,6 +103,20 @@ namespace Assembler {
         /// </summary>
         public ConditionalSection Section { get; set; }
 
+        public bool IsEmptyOrComment {
+            get => Label == null
+                    && Assignment == null
+                    && Instruction == null
+                    && Arguments.Length <= 0
+                    && !IsBlockOpen
+                    && !IsBlockClose
+                    && Section == null;
+        }
+
+        public bool IsEmpty {
+            get => IsEmptyOrComment && Comments == null;
+        }
+
         /// <summary>
         /// An assembly-ish code representation of an assembly line
         /// </summary>

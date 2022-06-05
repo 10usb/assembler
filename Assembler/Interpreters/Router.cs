@@ -31,7 +31,8 @@ namespace Assembler.Interpreters {
         }
 
         public void Process(AssemblyLine line) {
-            current.Process(line);
+            if(!line.IsEmptyOrComment)
+                current.Process(line);
 
             //Console.WriteLine("Label      : {0}", line.Label);
             //Console.WriteLine("Scope      : {0}", line.Scope);

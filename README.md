@@ -12,25 +12,41 @@ The instructions should NOT be hardcoded into the assembler. Instead these shoul
 
 ## Basic syntax
 ```
+import "other.file"
+
 enum register {
     a = 0
     b = 1
     ; ....
 }
 
+; globally accessible and can't be changed
+const NUM_DRIVES 4
+
+; global variable, prefixing with global is optional
+counter = 0
+
+; can only be used in code local to the global code
+local varX = "Hello world"
+
 macro mov a b {
+    if (counter > 100){
+        throw "Can't move more then 100 times"
+    }
+
+    ; To set a global variable from within a macro is has to be prefixed
+    global counter = counter + 1
+
     if (b is register){
-        local opcode = 00000000b
+        opcode = 00000000b
     } else {
-        local opcode = 00001000b
+        opcode = 00001000b
     }
 
     if ($modifier == "+") {
-        local opcode = (opcode | 10000000b)
-    }
-
-    if ($modifier == "-") {
-        local opcode = (opcode | 01000000b)
+        opcode = (opcode | 10000000b)
+    } elseif ($modifier == "-") {
+        opcode = (opcode | 01000000b)
     }
 
     db opcode
@@ -42,15 +58,17 @@ main:
     mov A 23
     tlt A (1 << 5)
     + add A 1
+
+image:
+    include "binary.file"
 ```
 
 ## Still needs to be added
- - build-in $ variables
- - defining enum types
- - include other files
- - direct import of other file contents as data
+ - import other files
+ - direct include other file contents
  - User-friendly error messages
  - Think of a better name (cli command?)
 
  ## Whishes
  - array types using the square brackets [] to allow passing an array of bytes and misusing it as memory addresses or indirect selectors
+ - build-in $ variables for offset and origin values

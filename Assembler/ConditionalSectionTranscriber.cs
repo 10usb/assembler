@@ -23,7 +23,7 @@ namespace Assembler {
                 IConstant result = interpreter.Translate(section.Condition).GetValue(scope);
 
                 if (!(result is Number number))
-                    throw new Exception("Failed to resolve condition");
+                    throw new Exception(string.Format("Failed to resolve condition '{0}'", section.Condition));
 
                 success = number.Value != 0;
             }

@@ -52,7 +52,7 @@ namespace Assembler {
                 switch (scopeType) {
                     case ScopeType.Constant: document.Constants.Set(name, value); break;
                     case ScopeType.Global: document.Globals.Set(name, value); break;
-                    default: throw new Exception("Can't set '{0}' of a unknown scope");
+                    default: throw new Exception(string.Format("Can't set '{0}' of a unknown scope", name));
                 }
             }
         }

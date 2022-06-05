@@ -34,10 +34,21 @@ namespace Assembler.Values {
         public IConstant GetValue(IScope scope) {
             // We first try to get left and right to see if thay can be resolve
             IValue left = this.left.GetValue(scope);
+            IValue right = this.right.GetValue(scope);
+
+            if (right is ClassType classType) {
+                left = this.left.Resolve(scope);
+
+                switch (operation) {
+                    case Operation.Cast: return left.Cast(classType) as IConstant;
+                    case Operation.Is: return new Number(classType.Equals(left.Class) ? 1 : 0, NumberFormat.Decimal);
+                    default: throw new Exception("Unsupported operation");
+                }
+            }
+
             if (left == null)
                 return null;
 
-            IValue right = this.right.GetValue(scope);
             if (right == null)
                 return null;
 
@@ -46,14 +57,6 @@ namespace Assembler.Values {
 
             if (left is Text && right is Text)
                 return Execute(left as Text, right as Text);
-
-            if (right is ClassType classType) {
-                switch (operation) {
-                    case Operation.Cast: return left.Cast(classType) as IConstant;
-                    case Operation.Is: return new Number(classType.Equals(left.Class) ? 1 : 0, NumberFormat.Decimal);
-                    default: throw new Exception("Unsupported operation");
-                }
-            }
 
             throw new Exception(string.Format("Can't perform the operation '{0}'. Both sides need to be of same type", this));
         }
@@ -94,11 +97,11 @@ namespace Assembler.Values {
         /// <param name="scope"></param>
         /// <returns></returns>
         public IValue Resolve(IScope scope) {
-            IValue left = (Number)this.left.GetValue(scope);
+            IValue left = this.left.GetValue(scope);
             if (left == null)
                 left = this.left.Resolve(scope);
 
-            IValue right = (Number)this.right.GetValue(scope);
+            IValue right = this.right.GetValue(scope);
             if (right == null)
                 right = this.right.Resolve(scope);
 

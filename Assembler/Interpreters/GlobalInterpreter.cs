@@ -77,6 +77,7 @@ namespace Assembler.Interpreters {
                 parser.Parse(reader);
             }
         }
+
         protected override void StartImport(AssemblyLine line) {
             if (line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for include", line.LineNumber);

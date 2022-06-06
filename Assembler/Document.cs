@@ -50,6 +50,22 @@ namespace Assembler {
             types = new VariableScope();
         }
 
+        public void AddImport(DirectoryInfo directoryInfo) {
+            throw new NotImplementedException();
+        }
+
+        public FileInfo ResolveImport(string path) {
+            throw new NotImplementedException();
+        }
+
+        public void AddInclude(DirectoryInfo directoryInfo) {
+            throw new NotImplementedException();
+        }
+
+        public FileInfo ResolveInclude(string path) {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Add a new macro to the list of defined macro's
         /// </summary>

@@ -9,6 +9,9 @@ namespace Assembler {
         private static FileInfo source;
         private static FileInfo output;
         private static bool wait;
+        private static readonly List<DirectoryInfo> includePaths = new List<DirectoryInfo>();
+        private static readonly List<DirectoryInfo> importPaths = new List<DirectoryInfo>();
+        private static readonly List<string> imports = new List<string>();
 
         static int Main(string[] args) {
             try {
@@ -31,11 +34,14 @@ namespace Assembler {
         }
 
         private static void ShowHelp() {
-            Console.WriteLine("Usage: assembler [options...] filename");
+            Console.WriteLine("Usage: assembler [options...] <source>");
             Console.WriteLine();
             Console.WriteLine("Options");
-            Console.WriteLine(" -o <file>         write output to file");
-            Console.WriteLine(" --wait            wait for any key");
+            Console.WriteLine(" -o <file>                   write output to file");
+            Console.WriteLine(" --wait                      wait for any key");
+            Console.WriteLine(" --include-path <folder>     the folder to look in when including files");
+            Console.WriteLine(" --import-path <folder>      the folder to look in file when importing");
+            Console.WriteLine(" --import <file>             import a file before processing the source file");
         }
 
         private static bool Parse(string[] args) {
@@ -49,11 +55,29 @@ namespace Assembler {
                 switch (enumerator.Current) {
                     case "-o": {
                         if (!enumerator.MoveNext())
-                            throw new Exception("Missing argument for -0");
+                            throw new Exception("Missing argument for -o");
                         output = new FileInfo(enumerator.Current);
                     }
                     break;
                     case "--wait": wait = true; break;
+                    case "--include-path": {
+                        if (!enumerator.MoveNext())
+                            throw new Exception("Missing argument for --include-path");
+                        includePaths.Add(new DirectoryInfo(enumerator.Current));
+                    }
+                    break;
+                    case "--import-path": {
+                        if (!enumerator.MoveNext())
+                            throw new Exception("Missing argument for --import-path");
+                        importPaths.Add(new DirectoryInfo(enumerator.Current));
+                    }
+                    break;
+                    case "--import": {
+                        if (!enumerator.MoveNext())
+                            throw new Exception("Missing argument for --import");
+                        imports.Add(enumerator.Current);
+                    }
+                    break;
                     default: throw new Exception(string.Format("Unknown commandline option '{0}'", enumerator.Current));
                 }
 
@@ -80,7 +104,28 @@ namespace Assembler {
 
             using (StreamReader reader = source.OpenText())
             using (Document document = new Document(output)) {
-                Parser parser = new Parser(source, new Router(document));
+                foreach (DirectoryInfo directoryInfo in includePaths)
+                    document.AddInclude(directoryInfo);
+
+                foreach (DirectoryInfo directoryInfo in includePaths)
+                    document.AddImport(directoryInfo);
+
+                Router router = new Router(document);
+                Parser parser;
+
+                if (imports.Count > 0) {
+                    ImportInterpreter importer = new ImportInterpreter(router, document, new LocalScope(document));
+                    router.PushState(importer);
+
+                    foreach (string path in imports) {
+                        parser = new Parser(document.ResolveImport(path), router);
+                        parser.Parse(reader);
+                    }
+
+                    router.PopState();
+                }
+
+                parser = new Parser(source, router);
                 parser.Parse(reader);
             }
         }

@@ -32,6 +32,7 @@ namespace Assembler.Interpreters {
                     case "macro": StartMacro(line); return;
                     case "enum": StartEnum(line); return;
                     case "include": StartInclude(line); return;
+                    case "import": StartImport(line); return;
                     default: ProcessInstruction(line); break;
                 }
             }
@@ -46,7 +47,6 @@ namespace Assembler.Interpreters {
             }
         }
 
-
         private void SetOrigin(AssemblyLine line) {
             if (line.Arguments == null || line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for org", line.LineNumber);
@@ -57,7 +57,7 @@ namespace Assembler.Interpreters {
             document.SetOrigin(number.Value);
         }
 
-        private void PutByte(AssemblyLine line) {
+        protected virtual void PutByte(AssemblyLine line) {
             document.PutByte(line.Arguments.Select(argument => {
                 IConstant constant = argument.GetValue(scope);
                 if (constant != null)
@@ -82,11 +82,12 @@ namespace Assembler.Interpreters {
 
         protected abstract void StartEnum(AssemblyLine line);
 
-
         protected abstract void ProcessInstruction(AssemblyLine line);
 
         protected abstract void ProcessSection(AssemblyLine line);
 
         protected abstract void StartInclude(AssemblyLine line);
+
+        protected abstract void StartImport(AssemblyLine line);
     }
 }

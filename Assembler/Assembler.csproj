@@ -50,6 +50,7 @@
     <Compile Include="ConditionalSectionTranscriber.cs" />
     <Compile Include="Interpreters\BaseInterpreter.cs" />
     <Compile Include="Interpreters\EnumInterpreter.cs" />
+    <Compile Include="Interpreters\ImportInterpreter.cs" />
     <Compile Include="LocalScope.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Interpreters\IfElseDefinitionInterpreter.cs" />

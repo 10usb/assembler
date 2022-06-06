@@ -68,5 +68,9 @@ namespace Assembler.Interpreters {
         protected override void StartInclude(AssemblyLine line) {
             throw new NotImplementedException();
         }
+
+        protected override void StartImport(AssemblyLine line) {
+            throw new NotImplementedException();
+        }
     }
 }

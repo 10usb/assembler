@@ -17,6 +17,8 @@ namespace Assembler {
         private readonly VariableScope globals;
         private readonly VariableScope constants;
         private readonly VariableScope types;
+        private readonly List<DirectoryInfo> importDirectories;
+        private readonly List<DirectoryInfo> includeDirectories;
         private Macro macros;
 
         /// <summary>
@@ -48,22 +50,44 @@ namespace Assembler {
             globals = new VariableScope();
             constants = new VariableScope();
             types = new VariableScope();
+
+            importDirectories = new List<DirectoryInfo>();
+            includeDirectories = new List<DirectoryInfo>();
         }
 
-        public void AddImport(DirectoryInfo directoryInfo) {
-            throw new NotImplementedException();
+        public void AddImport(DirectoryInfo directory) {
+            importDirectories.Add(directory);
         }
 
         public FileInfo ResolveImport(string path) {
-            throw new NotImplementedException();
+            foreach (DirectoryInfo directory in importDirectories) {
+                string fullName = Path.Combine(directory.FullName, path);
+
+                if (File.Exists(fullName))
+                    return new FileInfo(fullName);
+
+                fullName = Path.ChangeExtension(fullName, ".asm");
+
+                if (File.Exists(fullName))
+                    return new FileInfo(fullName);
+            }
+
+            return null;
         }
 
-        public void AddInclude(DirectoryInfo directoryInfo) {
-            throw new NotImplementedException();
+        public void AddInclude(DirectoryInfo directory) {
+            importDirectories.Add(directory);
         }
 
         public FileInfo ResolveInclude(string path) {
-            throw new NotImplementedException();
+            foreach (DirectoryInfo directory in includeDirectories) {
+                string fullName = Path.Combine(directory.FullName, path);
+
+                if (File.Exists(fullName))
+                    return new FileInfo(fullName);
+            }
+
+            return null;
         }
 
         /// <summary>

@@ -65,12 +65,26 @@ namespace Assembler.Interpreters {
             if (line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for include", line.LineNumber);
 
-            if (!(line.Arguments[0] is Text text))
+            string path;
+
+            if (line.Arguments[0] is Text text) {
+                path = text.Value;
+            } else {
                 throw new AssemblerException("Argument must be a string", line.LineNumber);
+            }
 
-            string path = Path.Combine(line.Source.Directory.FullName, text.Value);
 
-            FileInfo file = new FileInfo(path);
+            FileInfo file;
+            if (Path.IsPathRooted(path)) {
+                file = new FileInfo(path);
+            } else {
+                file = new FileInfo(Path.Combine(line.Source.Directory.FullName, path));
+                if (!file.Exists)
+                    file = document.ResolveInclude(path);
+            }
+
+            if (file == null || !file.Exists)
+                throw new AssemblerException("File {0} not exists", line.LineNumber, path);
 
             using (StreamReader reader = file.OpenText()) {
                 Parser parser = new Parser(file, router);
@@ -82,12 +96,31 @@ namespace Assembler.Interpreters {
             if (line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for include", line.LineNumber);
 
-            if (!(line.Arguments[0] is Text text))
+            ;
+            FileInfo file;
+
+            if (line.Arguments[0] is Text text) {
+                string path = text.Value;
+
+                if (Path.IsPathRooted(path)) {
+                    file = new FileInfo(path);
+                } else {
+                    file = new FileInfo(Path.Combine(line.Source.Directory.FullName, path));
+                    if (!file.Exists)
+                        file = document.ResolveImport(path);
+                }
+
+                if (file == null || !file.Exists)
+                    throw new AssemblerException("File {0} not exists", line.LineNumber, path);
+
+            } else if (line.Arguments[0] is Symbol symbol) {
+                file = document.ResolveImport(symbol.Name);
+
+                if (file == null)
+                    throw new AssemblerException("File {0} not exists", line.LineNumber, symbol.Name);
+            } else {
                 throw new AssemblerException("Argument must be a string", line.LineNumber);
-
-            string path = Path.Combine(line.Source.Directory.FullName, text.Value);
-
-            FileInfo file = new FileInfo(path);
+            }
 
             using (StreamReader reader = file.OpenText()) {
                 Parser parser = new Parser(file, router);

@@ -42,6 +42,7 @@ namespace Assembler.Values {
                 switch (operation) {
                     case Operation.Cast: return left.Cast(classType) as IConstant;
                     case Operation.Is: return new Number(classType.Equals(left.Class) ? 1 : 0, NumberFormat.Decimal);
+                    case Operation.IsNot: return new Number(classType.Equals(left.Class) ? 0 : 1, NumberFormat.Decimal);
                     default: throw new Exception("Unsupported operation");
                 }
             }

@@ -26,6 +26,7 @@ namespace Assembler.Values {
         LessOrEqual,
         GreaterOrEqual,
         Is,
+        IsNot,
         Cast,
     }
 }

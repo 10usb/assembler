@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace Assembler {
     public class Parser {
-        private static readonly Regex linePattern = new Regex(@"^(?:\s*([a-zA-Z0-9]+):)?\s*(?:(?:(?:(?:(global|local|const)\s+)?([a-zA-Z0-9]+)\s*=|(?:([+\-&!*?$%=~}]+)\s*)?([a-zA-Z0-9]+))\s*(.*?)\s*({)?)|(}))?\s*(;.+)?$", RegexOptions.Compiled);
-        private static readonly Regex valueRegex = new Regex(@"^\s*(?:([1-9][0-9]*\b|0\b)|(0x[0-9a-fA-F]+\b)|(0[0-7]+\b)|([01]+b\b)|([a-zA-Z$][a-zA-Z0-9$]*)|""([^""]*(?:""""[^""]*)*)""|(((?<open>\()[^()]*)+([^()]*(?<-open>\)))+(?(open)(?!))))", RegexOptions.Compiled);
+        private static readonly Regex linePattern = new Regex(@"^(?:\s*([a-zA-Z0-9_]+):)?\s*(?:(?:(?:(?:(global|local|const)\s+)?([a-zA-Z0-9]+)\s*=|(?:([+\-&!*?$%=~}]+)\s*)?([a-zA-Z0-9]+))\s*(.*?)\s*({)?)|(}))?\s*(;.+)?$", RegexOptions.Compiled);
+        private static readonly Regex valueRegex = new Regex(@"^\s*(?:([1-9][0-9]*\b|0\b)|(0x[0-9a-fA-F]+\b)|(0[0-7]+\b)|([01]+b\b)|([a-zA-Z$_][a-zA-Z0-9$_]*)|""([^""]*(?:""""[^""]*)*)""|(((?<open>\()[^()]*)+([^()]*(?<-open>\)))+(?(open)(?!))))", RegexOptions.Compiled);
         private static readonly Regex operatorRegex = new Regex(@"^\s*(<<|>>|>=|<=|!=|is|as|[+\-*/%|=\^<>&])\s*", RegexOptions.Compiled);
 
         private const int GROUP_DECIMAL = 1;
@@ -51,7 +51,7 @@ namespace Assembler {
 
                 IValue[] arguments = null;
                 if (match.Groups[GROUP_ARGUMENTS].Value.Length > 0)
-                    arguments = ParseArguments(match.Groups[GROUP_ARGUMENTS].Value).ToArray();
+                    arguments = ParseArguments(match.Groups[GROUP_ARGUMENTS].Value, lineNr).ToArray();
 
                 AssemblyLine assemblyLine = new AssemblyLine(source, lineNr) {
                     Label = match.Groups[GROUP_LABEL].Value,
@@ -74,18 +74,18 @@ namespace Assembler {
         private ScopeType GetScopeType(string value, int lineNr) {
             switch (value) {
                 case "global": return ScopeType.Global;
-                case "constant": return ScopeType.Constant;
+                case "const": return ScopeType.Constant;
                 case "local": return ScopeType.Local;
                 case "": return ScopeType.None;
-                default: throw new AssemblerException("Unexpected syntax on line {0}", lineNr);
+                default: throw new AssemblerException("Unexpected syntax on line {0}", lineNr, value);
             }
         }
 
-        private IEnumerable<IValue> ParseArguments(string value) {
+        private IEnumerable<IValue> ParseArguments(string value, int lineNr) {
             do {
                 Match match = valueRegex.Match(value);
                 if (!match.Success)
-                    throw new Exception("Failed");
+                    throw new AssemblerException("Failed to match argument '{0}'", lineNr, value);
 
                 yield return ParseValue(match);
 

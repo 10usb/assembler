@@ -38,6 +38,8 @@ namespace Assembler {
 
         public VariableScope Types => types;
 
+        public Writer Writer => writer;
+
         /// <summary>
         /// Constructs a Documents and opens a stream to the output file
         /// </summary>

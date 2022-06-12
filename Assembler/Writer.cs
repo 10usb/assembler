@@ -100,8 +100,17 @@ namespace Assembler {
         /// </summary>
         /// <param name="data"></param>
         private void Write(byte[] data) {
-            offset += data.Length;
-            stream.Write(data, 0, data.Length);
+            Write(data, data.Length);
+        }
+
+        /// <summary>
+        /// Write an array of bytes
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="length"></param>
+        public void Write(byte[] data, int length) {
+            offset += length;
+            stream.Write(data, 0, length);
         }
 
         /// <summary>

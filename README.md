@@ -60,15 +60,16 @@ main:
     + add A 1
 
 image:
-    include "binary.file"
+    file "binary.file"
 ```
 
 ## Still needs to be added
- - import other files
- - direct include other file contents
  - User-friendly error messages
+ - import/including other files from within an import context
  - Think of a better name (cli command?)
+ - Wiki pages
 
  ## Whishes
  - array types using the square brackets [] to allow passing an array of bytes and misusing it as memory addresses or indirect selectors
  - build-in $ variables for offset and origin values
+ - import/including other files from within an macro

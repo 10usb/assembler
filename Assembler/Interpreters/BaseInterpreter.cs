@@ -1,6 +1,7 @@
 ﻿using Assembler.Values;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace Assembler.Interpreters {
                     case "enum": StartEnum(line); return;
                     case "include": StartInclude(line); return;
                     case "import": StartImport(line); return;
+                    case "file": ReadFile(line); return;
                     default: ProcessInstruction(line); break;
                 }
             }
@@ -89,5 +91,37 @@ namespace Assembler.Interpreters {
         protected abstract void StartInclude(AssemblyLine line);
 
         protected abstract void StartImport(AssemblyLine line);
+
+        protected void ReadFile(AssemblyLine line) {
+            if (line.Arguments.Length != 1)
+                throw new AssemblerException("Unexpected argument count for file", line.LineNumber);
+
+            string path;
+
+            if (line.Arguments[0] is Text text) {
+                path = text.Value;
+            } else {
+                throw new AssemblerException("Argument must be a string", line.LineNumber);
+            }
+
+
+            FileInfo file;
+            if (Path.IsPathRooted(path)) {
+                file = new FileInfo(path);
+            } else {
+                file = new FileInfo(Path.Combine(line.Source.Directory.FullName, path));
+            }
+
+            if (file == null || !file.Exists)
+                throw new AssemblerException("File {0} not exists", line.LineNumber, path);
+
+            byte[] buffer = new byte[4096];
+            using (Stream stream = file.OpenRead()) {
+                int read;
+                while ((read = stream.Read(buffer, 0, buffer.Length)) > 0) {
+                    document.Writer.Write(buffer, read);
+                }
+            }
+        }
     }
 }

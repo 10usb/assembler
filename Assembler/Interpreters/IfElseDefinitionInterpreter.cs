@@ -60,7 +60,7 @@ namespace Assembler.Interpreters {
 
             ConditionalSection section = new ConditionalSection(line.Arguments[0]);
 
-            section.Add(new AssemblyLine(line.Source ,line.LineNumber) {
+            this.section.Add(new AssemblyLine(line.Source, line.LineNumber) {
                 Section = section
             });
 

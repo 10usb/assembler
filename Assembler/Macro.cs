@@ -50,6 +50,14 @@ namespace Assembler {
 
         public void SetLabels(string[] labels) {
             this.labels = new HashSet<string>(labels);
+
+            foreach (AssemblyLine line in lines) {
+                line.Arguments = line.Arguments.Select(arg => arg.Derive(value => {
+                    if (value is Symbol symbol && HasLabel(symbol.Name))
+                        return new Label(symbol.Name);
+                    return null;
+                })).ToArray();
+            }
         }
 
         public bool HasLabel(string name) {

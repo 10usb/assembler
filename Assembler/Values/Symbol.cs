@@ -5,7 +5,7 @@
     /// </summary>
     public class Symbol : IValue {
         private readonly string name;
-        private ClassType classType;
+        protected ClassType classType;
 
         public ClassType Class => classType;
 

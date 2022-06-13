@@ -13,10 +13,6 @@ namespace Assembler.Values {
     /// a second time
     /// </summary>
     public class Label : Symbol {
-        private ClassType classType;
-
-        public ClassType Class => classType;
-
         public Label(string name) : base(name) {
         }
 

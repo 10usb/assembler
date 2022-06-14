@@ -127,6 +127,9 @@ namespace Assembler {
 
                 parser = new Parser(source, router);
                 parser.Parse(reader);
+
+                document.Resolve();
+                Console.WriteLine(document);
             }
         }
     }

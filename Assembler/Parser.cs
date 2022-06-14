@@ -41,7 +41,7 @@ namespace Assembler {
         }
 
         public void Parse(TextReader reader) {
-            int lineNr = 0;
+            int lineNr = 1;
             string line;
 
             while ((line = reader.ReadLine()) != null) {

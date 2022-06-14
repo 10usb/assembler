@@ -162,10 +162,9 @@ namespace Assembler {
         }
 
         /// <summary>
-        /// Makes sure the current in-memory changes are flushed to the output. This to make sure the
-        /// file is of complete length. Then is tries to resolve all the symbols.
+        /// Resolves any entries in the symbol table
         /// </summary>
-        public void Dispose() {
+        public void Resolve() {
             writer.Flush();
 
             foreach (SymbolTable.Entry entry in symbolTable) {
@@ -179,20 +178,31 @@ namespace Assembler {
                 writer.Seek(entry.Offset);
                 writer.SetByte(number.Value);
             }
+        }
 
+        /// <summary>
+        /// Makes sure the current in-memory changes are flushed to the output. This to make sure the
+        /// file is of complete length. Then is tries to resolve all the symbols.
+        /// </summary>
+        public void Dispose() {
+            writer.Flush();
             writer.Dispose();
 
+        }
 
-            Console.WriteLine("-------- References --------");
-            Console.Write(referenceTable);
-            Console.WriteLine("-------- Symbols -----------");
-            Console.Write(symbolTable);
-            Console.WriteLine("-------- Types -------------");
-            Console.Write(types);
-            Console.WriteLine("-------- Constants ---------");
-            Console.Write(constants);
-            Console.WriteLine("-------- Globals -----------");
-            Console.WriteLine(globals);
+        public override string ToString() {
+            StringWriter writer = new StringWriter();
+            writer.WriteLine("-------- References --------");
+            writer.Write(referenceTable);
+            writer.WriteLine("-------- Symbols -----------");
+            writer.Write(symbolTable);
+            writer.WriteLine("-------- Types -------------");
+            writer.Write(types);
+            writer.WriteLine("-------- Constants ---------");
+            writer.Write(constants);
+            writer.WriteLine("-------- Globals -----------");
+            writer.WriteLine(globals);
+            return writer.ToString();
         }
     }
 }

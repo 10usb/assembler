@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Assembler {
-    public class Parser {
+    public class Parser : IDisposable {
         private static readonly Regex linePattern = new Regex(@"^(?:\s*([a-zA-Z0-9_]+):)?\s*(?:(?:(?:(?:(global|local|const)\s+)?([a-zA-Z0-9]+)\s*=|(?:([+\-&!*?$%=~}]+)\s*)?([a-zA-Z0-9]+))\s*(.*?)\s*({)?)|(}))?\s*(;.+)?$", RegexOptions.Compiled);
         private static readonly Regex valueRegex = new Regex(@"^\s*(?:([1-9][0-9]*\b|0\b)|(0x[0-9a-fA-F]+\b)|(0[0-7]+\b)|([01]+b\b)|([a-zA-Z$_][a-zA-Z0-9$_]*)|""([^""]*(?:""""[^""]*)*)""|(((?<open>\()[^()]*)+([^()]*(?<-open>\)))+(?(open)(?!))))", RegexOptions.Compiled);
         private static readonly Regex operatorRegex = new Regex(@"^\s*(<<|>>|>=|<=|!=|is not|is|as|[+\-*/%|=\^<>&])\s*", RegexOptions.Compiled);
@@ -34,14 +34,21 @@ namespace Assembler {
 
         private readonly FileInfo source;
         private readonly IInterpreter interpreter;
+        private readonly TextReader reader;
+        private int lineNr;
 
         public Parser(FileInfo source, IInterpreter interpreter) {
             this.source = source;
             this.interpreter = interpreter;
+            reader = source.OpenText();
+            lineNr = 1;
         }
 
-        public void Parse(TextReader reader) {
-            int lineNr = 1;
+        public void Dispose() {
+            reader.Dispose();
+        }
+
+        public void Parse() {
             string line;
 
             while ((line = reader.ReadLine()) != null) {
@@ -125,7 +132,7 @@ namespace Assembler {
 
                 Match operatorMatch = operatorRegex.Match(value);
                 if (!operatorMatch.Success)
-                    throw new Exception("Failed");
+                    throw new AssemblerException("Failed to parse operator", lineNr);
 
                 value = value.Substring(operatorMatch.Length);
 
@@ -167,7 +174,7 @@ namespace Assembler {
                 case "as": return Operation.Cast;
             }
 
-            throw new Exception("Unknown operation");
+            throw new AssemblerException("Unknown operation", lineNr);
         }
     }
 }

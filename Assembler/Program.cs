@@ -102,7 +102,6 @@ namespace Assembler {
             if (output == null)
                 GenerateOutput();
 
-            using (StreamReader reader = source.OpenText())
             using (Document document = new Document(output)) {
                 foreach (DirectoryInfo directoryInfo in includePaths)
                     document.AddInclude(directoryInfo);
@@ -111,22 +110,21 @@ namespace Assembler {
                     document.AddImport(directoryInfo);
 
                 Router router = new Router(document);
-                Parser parser;
 
                 if (imports.Count > 0) {
-                    ImportInterpreter importer = new ImportInterpreter(router, document, new LocalScope(document));
-                    router.PushState(importer);
-
                     foreach (string path in imports) {
-                        parser = new Parser(document.ResolveImport(path), router);
-                        parser.Parse(reader);
+                        ImportInterpreter importer = new ImportInterpreter(router, document);
+                        router.PushState(importer);
+                        using (Parser parser = new Parser(document.ResolveImport(path), router)) {
+                            parser.Parse();
+                        }
+                        router.PopState();
                     }
-
-                    router.PopState();
                 }
 
-                parser = new Parser(source, router);
-                parser.Parse(reader);
+                using (Parser parser = new Parser(source, router)) {
+                    parser.Parse();
+                }
 
                 document.Resolve();
                 Console.WriteLine(document);

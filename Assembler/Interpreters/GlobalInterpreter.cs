@@ -86,9 +86,8 @@ namespace Assembler.Interpreters {
             if (file == null || !file.Exists)
                 throw new AssemblerException("File {0} not exists", line.LineNumber, path);
 
-            using (StreamReader reader = file.OpenText()) {
-                Parser parser = new Parser(file, router);
-                parser.Parse(reader);
+            using (Parser parser = new Parser(file, router)) {
+                parser.Parse();
             }
         }
 
@@ -122,14 +121,12 @@ namespace Assembler.Interpreters {
                 throw new AssemblerException("Argument must be a string", line.LineNumber);
             }
 
-            using (StreamReader reader = file.OpenText()) {
-                Parser parser = new Parser(file, router);
-
-                ImportInterpreter interpreter = new ImportInterpreter(router, document, scope);
-                router.PushState(interpreter);
-                parser.Parse(reader);
-                router.PopState();
+            ImportInterpreter interpreter = new ImportInterpreter(router, document);
+            router.PushState(interpreter);
+            using (Parser parser = new Parser(file, router)) {
+                parser.Parse();
             }
+            router.PopState();
         }
     }
 }

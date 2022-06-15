@@ -11,10 +11,10 @@ namespace Assembler.Interpreters {
 
         protected override ScopeType DefaultScope => ScopeType.None;
 
-        public ImportInterpreter(Router router, Document document, LocalScope scope) {
+        public ImportInterpreter(Router router, Document document) {
             this.router = router;
             this.document = document;
-            this.scope = scope;
+            scope = new LocalScope(document);
         }
 
         protected override void PutByte(AssemblyLine line) {

@@ -51,6 +51,7 @@
     <Compile Include="ConditionalSectionTranscriber.cs" />
     <Compile Include="Interpreters\BaseInterpreter.cs" />
     <Compile Include="Interpreters\EnumInterpreter.cs" />
+    <Compile Include="Interpreters\ErrorInterpreter.cs" />
     <Compile Include="Interpreters\ImportInterpreter.cs" />
     <Compile Include="ISourcePointer.cs" />
     <Compile Include="LocalScope.cs" />

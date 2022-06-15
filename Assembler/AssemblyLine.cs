@@ -8,7 +8,7 @@ namespace Assembler {
     /// into a single line of assembly. It will usually be provided by the parser
     /// to the interpreters.
     /// </summary>
-    public class AssemblyLine {
+    public class AssemblyLine : ISourcePointer {
         private readonly FileInfo source;
         private readonly int lineNr;
         private string label;

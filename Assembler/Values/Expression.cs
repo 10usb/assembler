@@ -80,14 +80,14 @@ namespace Assembler.Values {
                 case Operation.NotEqual: return new Number(left.Value != right.Value ? 1 : 0, NumberFormat.Decimal);
                 case Operation.LessOrEqual: return new Number(left.Value <= right.Value ? 1 : 0, NumberFormat.Decimal);
                 case Operation.GreaterOrEqual: return new Number(left.Value >= right.Value ? 1 : 0, NumberFormat.Decimal);
-                default: throw new Exception("Unsupported operation");
+                default: throw new BadProgrammerException("Unsupported operation");
             }
         }
 
         private IConstant Execute(Text left, Text right) {
             switch (operation) {
                 case Operation.Equal: return new Number(left.Value == right.Value ? 1 : 0, NumberFormat.Decimal);
-                default: throw new Exception("Unsupported operation");
+                default: throw new BadProgrammerException("Unsupported operation");
             }
         }
 

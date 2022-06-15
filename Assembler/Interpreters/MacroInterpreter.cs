@@ -61,7 +61,7 @@ namespace Assembler.Interpreters {
 
         protected override void ProcessSection(AssemblyLine line) {
             ConditionalSectionTranscriber transcriber = new ConditionalSectionTranscriber(scope, this);
-            transcriber.Transcribe(line.Section);
+            transcriber.Transcribe(line.Section, trace.Create(line));
         }
 
         protected override void StartInclude(AssemblyLine line) {

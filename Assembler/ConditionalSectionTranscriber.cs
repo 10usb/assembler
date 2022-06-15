@@ -16,14 +16,14 @@ namespace Assembler {
             this.interpreter = interpreter;
         }
 
-        public void Transcribe(ConditionalSection section) {
+        public void Transcribe(ConditionalSection section, Trace trace) {
             bool success = true;
 
             if (section.Condition != null) {
                 IConstant result = interpreter.Translate(section.Condition).GetValue(scope);
 
                 if (!(result is Number number))
-                    throw new Exception(string.Format("Failed to resolve condition '{0}'", section.Condition));
+                    throw new AssemblerException("Failed to resolve condition '{0}'", trace, section.Condition);
 
                 success = number.Value != 0;
             }
@@ -32,7 +32,7 @@ namespace Assembler {
                 foreach (AssemblyLine line in section)
                     interpreter.Process(line);
             } else if (section.Next != null) {
-                Transcribe(section.Next);
+                Transcribe(section.Next, trace);
             }
         }
     }

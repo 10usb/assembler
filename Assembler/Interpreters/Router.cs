@@ -12,18 +12,15 @@ namespace Assembler.Interpreters {
     /// interpreter has reached the end.
     /// </summary>
     public class Router : IInterpreter {
-        private readonly Document document;
         private readonly Stack<IInterpreter> states;
         private IInterpreter current;
 
         /// <summary>
-        /// Construct a router with a document as it's target
+        /// Construct an empty router which has yet to be given a state
         /// </summary>
-        /// <param name="document"></param>
-        public Router(Document document) {
-            this.document = document;
+        public Router() {
             states = new Stack<IInterpreter>();
-            current = new GlobalInterpreter(this, this.document);
+            current = null;
         }
 
         public IValue Translate(IValue value) {
@@ -33,17 +30,6 @@ namespace Assembler.Interpreters {
         public void Process(AssemblyLine line) {
             if(!line.IsEmptyOrComment)
                 current.Process(line);
-
-            //Console.WriteLine("Label      : {0}", line.Label);
-            //Console.WriteLine("Scope      : {0}", line.Scope);
-            //Console.WriteLine("Assignment : {0}", line.Assignment);
-            //Console.WriteLine("Modifier   : {0}", line.Modifier);
-            //Console.WriteLine("Instruction: {0}", line.Instruction);
-            //Console.WriteLine("Arguments  : {0}", line.Arguments);
-            //Console.WriteLine("Block open : {0}", line.IsBlockOpen);
-            //Console.WriteLine("Block close: {0}", line.IsBlockClose);
-            //Console.WriteLine("Comments   : {0}", line.Comments);
-            //Console.WriteLine("-----------------------------------------------");
         }
 
         /// <summary>

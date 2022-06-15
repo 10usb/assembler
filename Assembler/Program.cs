@@ -109,12 +109,11 @@ namespace Assembler {
                 foreach (DirectoryInfo directoryInfo in includePaths)
                     document.AddImport(directoryInfo);
 
-                Router router = new Router(document);
+                Router router = new Router();
 
                 if (imports.Count > 0) {
                     foreach (string path in imports) {
-                        ImportInterpreter importer = new ImportInterpreter(router, document);
-                        router.PushState(importer);
+                        router.PushState(new ImportInterpreter(router, document));
                         using (Parser parser = new Parser(document.ResolveImport(path), router)) {
                             parser.Parse();
                         }
@@ -122,6 +121,7 @@ namespace Assembler {
                     }
                 }
 
+                router.PushState(new GlobalInterpreter(router, document));
                 using (Parser parser = new Parser(source, router)) {
                     parser.Parse();
                 }

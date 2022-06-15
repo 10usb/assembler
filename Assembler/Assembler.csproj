@@ -47,10 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblerException.cs" />
+    <Compile Include="BadProgrammerException.cs" />
     <Compile Include="ConditionalSectionTranscriber.cs" />
     <Compile Include="Interpreters\BaseInterpreter.cs" />
     <Compile Include="Interpreters\EnumInterpreter.cs" />
+    <Compile Include="Interpreters\ErrorInterpreter.cs" />
     <Compile Include="Interpreters\ImportInterpreter.cs" />
+    <Compile Include="ISourcePointer.cs" />
     <Compile Include="LocalScope.cs" />
     <Compile Include="Document.cs" />
     <Compile Include="Interpreters\IfElseDefinitionInterpreter.cs" />
@@ -67,6 +70,7 @@
     <Compile Include="ConditionalSection.cs" />
     <Compile Include="ScopeType.cs" />
     <Compile Include="SymbolTable.cs" />
+    <Compile Include="Trace.cs" />
     <Compile Include="Values\Mutator.cs" />
     <Compile Include="Values\Expression.cs" />
     <Compile Include="Values\IConstant.cs" />

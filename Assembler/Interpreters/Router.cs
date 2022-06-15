@@ -20,11 +20,11 @@ namespace Assembler.Interpreters {
         /// </summary>
         public Router() {
             states = new Stack<IInterpreter>();
-            current = null;
+            current = new ErrorInterpreter();
         }
 
         public IValue Translate(IValue value) {
-            throw new NotImplementedException();
+            throw new BadProgrammerException("Router is incapable of translating values");
         }
 
         public void Process(AssemblyLine line) {
@@ -46,7 +46,7 @@ namespace Assembler.Interpreters {
         /// </summary>
         public void PopState() {
             if (states.Count == 0)
-                throw new Exception("Corrupt processing state occured");
+                throw new BadProgrammerException("Corrupt processing state occured");
 
             current = states.Pop();
         }

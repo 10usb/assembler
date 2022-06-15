@@ -34,12 +34,14 @@ namespace Assembler {
 
         private readonly FileInfo source;
         private readonly IInterpreter interpreter;
+        private readonly Trace trace;
         private readonly TextReader reader;
         private int lineNr;
 
-        public Parser(FileInfo source, IInterpreter interpreter) {
+        public Parser(FileInfo source, IInterpreter interpreter, Trace trace) {
             this.source = source;
             this.interpreter = interpreter;
+            this.trace = trace;
             reader = source.OpenText();
             lineNr = 1;
         }
@@ -54,7 +56,7 @@ namespace Assembler {
             while ((line = reader.ReadLine()) != null) {
                 Match match = linePattern.Match(line);
                 if (!match.Success)
-                    throw new AssemblerException("Unexpected syntax on line {0}", lineNr);
+                    throw new AssemblerException("Unexpected syntax on line {0}", trace.Create(new AssemblyLine(source, lineNr)));
 
                 IValue[] arguments = null;
                 if (match.Groups[GROUP_ARGUMENTS].Value.Length > 0)
@@ -84,7 +86,7 @@ namespace Assembler {
                 case "const": return ScopeType.Constant;
                 case "local": return ScopeType.Local;
                 case "": return ScopeType.None;
-                default: throw new AssemblerException("Unexpected syntax on line {0}", lineNr, value);
+                default: throw new AssemblerException("Unexpected syntax on line {0}", trace.Create(new AssemblyLine(source, lineNr)), value);
             }
         }
 
@@ -92,7 +94,7 @@ namespace Assembler {
             do {
                 Match match = valueRegex.Match(value);
                 if (!match.Success)
-                    throw new AssemblerException("Failed to match argument '{0}'", lineNr, value);
+                    throw new AssemblerException("Failed to match argument '{0}'", trace.Create(new AssemblyLine(source, lineNr)), value);
 
                 yield return ParseValue(match);
 
@@ -132,7 +134,7 @@ namespace Assembler {
 
                 Match operatorMatch = operatorRegex.Match(value);
                 if (!operatorMatch.Success)
-                    throw new AssemblerException("Failed to parse operator", lineNr);
+                    throw new AssemblerException("Failed to parse operator", trace.Create(new AssemblyLine(source, lineNr)));
 
                 value = value.Substring(operatorMatch.Length);
 
@@ -174,7 +176,7 @@ namespace Assembler {
                 case "as": return Operation.Cast;
             }
 
-            throw new AssemblerException("Unknown operation", lineNr);
+            throw new AssemblerException("Unknown operation", trace.Create(new AssemblyLine(source, lineNr)));
         }
     }
 }

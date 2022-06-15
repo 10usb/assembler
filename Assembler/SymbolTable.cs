@@ -14,10 +14,11 @@ namespace Assembler {
             entries = new List<Entry>();
         }
 
-        public void Add(long offset, IValue reference) {
+        public void Add(long offset, IValue reference, Trace trace) {
             entries.Add(new Entry {
                 Offset = offset,
-                Reference = reference
+                Reference = reference,
+                Trace = trace
             });
         }
 
@@ -42,6 +43,7 @@ namespace Assembler {
         public class Entry {
             public long Offset { get; set; }
             public IValue Reference { get; set; }
+            public Trace Trace { get; internal set; }
         }
     }
 }

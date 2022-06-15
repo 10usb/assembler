@@ -137,12 +137,12 @@ namespace Assembler {
         /// Writes the values as bytes to output
         /// </summary>
         /// <param name="values"></param>
-        public void PutByte(IValue[] values) {
+        public void PutByte(IValue[] values, Trace trace) {
             foreach (IValue value in values) {
                 IConstant constant = value as IConstant;
 
                 if (constant == null) {
-                    symbolTable.Add(writer.FileOffset, value);
+                    symbolTable.Add(writer.FileOffset, value, trace);
                     writer.WriteByte(0);
                     continue;
                 }
@@ -157,7 +157,7 @@ namespace Assembler {
                     continue;
                 }
 
-                throw new Exception("This shouldn't happen");
+                throw new BadProgrammerException("Don't know how to convert value to bytes");
             }
         }
 
@@ -170,10 +170,10 @@ namespace Assembler {
             foreach (SymbolTable.Entry entry in symbolTable) {
                 IConstant value = entry.Reference.GetValue(referenceTable) as Number;
                 if (value == null)
-                    throw new AssemblerException(string.Format("Unknown symbol in '{0}'", entry.Reference), Trace.Empty);
+                    throw new AssemblerException("Unknown symbol in '{0}'", entry.Trace, entry.Reference);
 
                 if (!(value is Number number))
-                    throw new AssemblerException("Invalid data type for symbol", Trace.Empty);
+                    throw new AssemblerException("Invalid data type for symbol", entry.Trace);
 
                 writer.Seek(entry.Offset);
                 writer.SetByte(number.Value);

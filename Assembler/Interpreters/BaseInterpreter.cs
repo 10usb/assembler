@@ -73,7 +73,7 @@ namespace Assembler.Interpreters {
                     return constant;
 
                 return Translate(argument).Resolve(scope);
-            }).ToArray());
+            }).ToArray(), trace.Create(line));
         }
 
         private Exception Throw(AssemblyLine line) {

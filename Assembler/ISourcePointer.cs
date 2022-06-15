@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Assembler {
+    /// <summary>
+    /// A reference to a point in a source file
+    /// </summary>
     public interface ISourcePointer {
         /// <summary>
         /// The the source file this line is from

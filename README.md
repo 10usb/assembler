@@ -6,9 +6,9 @@ Couldn't I've done it with existing universal assemblers? Yes and no. I can defi
 ## Concept
 First off to add the modifier option obviously. Also to remove the redundant comma separating the arguments. Once seens that it's redundant it can't be unseen.
 
-To make parsing of expressions easier they have to be inside parentheses brackets.Sub-expression also need to have these parentheses brackets. Benefit of doing it like this, is that operator precedence issue is automaticly resolved.
+To make parsing of expressions easier they have to be inside parentheses brackets. For now sub-expression also need to have these parentheses brackets. Benefit of doing it like this, is that operator precedence issue is automaticly resolved. And the assembler doesn't have to become very complicated.
 
-The instructions should NOT be hardcoded into the assembler. Instead these should be defined as macro's. These in combination with enum's and simple checks should allow for defining all option.
+Templating, the instructions should NOT be hardcoded into the assembler. Instead these should be defined with macro's. These in combination with enum's and simple checks should allow for most things.
 
 ## Basic syntax
 ```
@@ -55,16 +55,15 @@ macro mov a b {
 }
 
 main:
-    mov A 23
-    tlt A (1 << 5)
-    + add A 1
+    mov r0 23
+    tlt r0 (1 << 5)
++   add r0 1
 
 image:
     file "binary.file"
 ```
 
 ## Still needs to be added
- - User-friendly error messages
  - import/including other files from within an import context
  - Think of a better name (cli command?)
  - Wiki pages
@@ -72,4 +71,4 @@ image:
  ## Whishes
  - array types using the square brackets [] to allow passing an array of bytes and misusing it as memory addresses or indirect selectors
  - build-in $ variables for offset and origin values
- - import/including other files from within an macro
+ - import/including other files from within a macro

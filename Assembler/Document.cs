@@ -170,10 +170,10 @@ namespace Assembler {
             foreach (SymbolTable.Entry entry in symbolTable) {
                 IConstant value = entry.Reference.GetValue(referenceTable) as Number;
                 if (value == null)
-                    throw new AssemblerException(string.Format("Unknown symbol in '{0}'", entry.Reference), 0);
+                    throw new AssemblerException(string.Format("Unknown symbol in '{0}'", entry.Reference), Trace.Empty);
 
                 if (!(value is Number number))
-                    throw new AssemblerException("Invalid data type for symbol", 0);
+                    throw new AssemblerException("Invalid data type for symbol", Trace.Empty);
 
                 writer.Seek(entry.Offset);
                 writer.SetByte(number.Value);

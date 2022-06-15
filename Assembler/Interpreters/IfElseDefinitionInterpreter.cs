@@ -9,10 +9,12 @@ namespace Assembler.Interpreters {
     public class IfElseDefinitionInterpreter : IInterpreter {
         private ConditionalSection section;
         private readonly Router router;
+        private readonly Trace trace;
 
-        public IfElseDefinitionInterpreter(ConditionalSection section, Router router) {
+        public IfElseDefinitionInterpreter(ConditionalSection section, Router router, Trace trace) {
             this.section = section;
             this.router = router;
+            this.trace = trace;
         }
 
         public IValue Translate(IValue value) {
@@ -21,7 +23,7 @@ namespace Assembler.Interpreters {
 
         public void Process(AssemblyLine line) {
             if (line.Label != null)
-                throw new AssemblerException("Can't define a label from within a if/elseif/else", line.LineNumber);
+                throw new AssemblerException("Can't define a label from within a if/elseif/else", trace.Create(line));
 
             if (line.Modifier == "}") {
                 StartElse(line);
@@ -36,16 +38,16 @@ namespace Assembler.Interpreters {
 
         private void StartElse(AssemblyLine line) {
             if(line.Instruction != "else" && line.Instruction != "elseif")
-                throw new AssemblerException("Unexpected token '{0}' after }", line.LineNumber, line.Instruction);
+                throw new AssemblerException("Unexpected token '{0}' after }", trace.Create(line), line.Instruction);
 
             if (!line.IsBlockOpen)
-                throw new AssemblerException("Invalid else/elseif", line.LineNumber);
+                throw new AssemblerException("Invalid else/elseif", trace.Create(line));
 
             if (line.Instruction == "else" && line.Arguments.Length != 0)
-                throw new AssemblerException("Unexpected else syntax", line.LineNumber);
+                throw new AssemblerException("Unexpected else syntax", trace.Create(line));
 
             if (line.Instruction == "elseif" && line.Arguments.Length != 1)
-                throw new AssemblerException("Unexpected elseif syntax", line.LineNumber);
+                throw new AssemblerException("Unexpected elseif syntax", trace.Create(line));
 
             section.Next = new ConditionalSection(line.Arguments.Length > 0 ? line.Arguments[0] : null);
             section = section.Next;
@@ -53,10 +55,10 @@ namespace Assembler.Interpreters {
 
         private void StartIfElse(AssemblyLine line) {
             if (line.Arguments.Length != 1)
-                throw new AssemblerException("An if requires one argument", line.LineNumber);
+                throw new AssemblerException("An if requires one argument", trace.Create(line));
 
             if (!line.IsBlockOpen)
-                throw new AssemblerException("Invalid macro", line.LineNumber);
+                throw new AssemblerException("Invalid macro", trace.Create(line));
 
             ConditionalSection section = new ConditionalSection(line.Arguments[0]);
 
@@ -64,7 +66,7 @@ namespace Assembler.Interpreters {
                 Section = section
             });
 
-            IfElseDefinitionInterpreter interpreter = new IfElseDefinitionInterpreter(section, router);
+            IfElseDefinitionInterpreter interpreter = new IfElseDefinitionInterpreter(section, router, trace);
             router.PushState(interpreter);
         }
     }

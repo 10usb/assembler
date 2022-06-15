@@ -23,7 +23,8 @@ namespace Assembler {
                 if (wait) Console.ReadKey();
                 return 0;
             } catch (AssemblerException e) {
-                Console.Error.WriteLine("{0} on line {1}", e.Message, e.LineNr);
+                Console.Error.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Trace);
             } catch (Exception ex) {
                 Console.Error.WriteLine(ex.Message);
                 Console.Error.WriteLine(ex.StackTrace);
@@ -113,8 +114,8 @@ namespace Assembler {
 
                 if (imports.Count > 0) {
                     foreach (string path in imports) {
-                        router.PushState(new ImportInterpreter(router, document));
-                        using (Parser parser = new Parser(document.ResolveImport(path), router)) {
+                        router.PushState(new ImportInterpreter(router, document, Trace.Empty));
+                        using (Parser parser = new Parser(document.ResolveImport(path), router, Trace.Empty)) {
                             parser.Parse();
                         }
                         router.PopState();
@@ -122,7 +123,7 @@ namespace Assembler {
                 }
 
                 router.PushState(new GlobalInterpreter(router, document));
-                using (Parser parser = new Parser(source, router)) {
+                using (Parser parser = new Parser(source, router, Trace.Empty)) {
                     parser.Parse();
                 }
 

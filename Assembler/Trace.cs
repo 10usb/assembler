@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Assembler {
     public class Trace : ISourcePointer {
+        public static Trace Empty => new Trace();
+
         ISourcePointer reference;
 
         public Trace Previous { get; private set; }
@@ -18,7 +20,7 @@ namespace Assembler {
         /// <summary>
         /// Creates an empty trace point
         /// </summary>
-        public Trace() {
+        private Trace() {
         }
 
         /// <summary>
@@ -34,6 +36,20 @@ namespace Assembler {
                 Previous = this.reference != null ? this : null,
                 reference = reference
             };
+        }
+
+        public override string ToString() {
+            StringBuilder builder = new StringBuilder();
+
+
+            builder.AppendFormat(" - {0} on {1}", Source.FullName, LineNumber);
+
+            if (Previous != null) {
+                builder.AppendLine();
+                builder.Append(Previous.ToString());
+            }
+
+            return builder.ToString();
         }
     }
 }

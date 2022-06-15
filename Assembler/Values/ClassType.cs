@@ -35,12 +35,15 @@
             return name == other.Name;
         }
 
-
         public override bool Equals(object obj) {
             if (obj is ClassType classType)
                 return Equals(classType);
 
             return false;
+        }
+
+        public override int GetHashCode() {
+            return name.GetHashCode();
         }
 
         public override string ToString() {

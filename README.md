@@ -63,10 +63,12 @@ image:
     file "binary.file"
 ```
 
+## How to
+More for more infomation on how to build you're own code in this assembler see [How To page](howto.md)
+
 ## Still needs to be added
  - import/including other files from within an import context
  - Think of a better name (cli command?)
- - Wiki pages
 
  ## Whishes
  - array types using the square brackets [] to allow passing an array of bytes and misusing it as memory addresses or indirect selectors

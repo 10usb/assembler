@@ -9,6 +9,7 @@ namespace Assembler {
         private static FileInfo source;
         private static FileInfo output;
         private static bool wait;
+        private static bool verbose;
         private static readonly List<DirectoryInfo> includePaths = new List<DirectoryInfo>();
         private static readonly List<DirectoryInfo> importPaths = new List<DirectoryInfo>();
         private static readonly List<string> imports = new List<string>();
@@ -43,6 +44,7 @@ namespace Assembler {
             Console.WriteLine(" --include-path <folder>     the folder to look in when including files");
             Console.WriteLine(" --import-path <folder>      the folder to look in file when importing");
             Console.WriteLine(" --import <file>             import a file before processing the source file");
+            Console.WriteLine(" --verbose                   print detailed assembler info");
         }
 
         private static bool Parse(string[] args) {
@@ -77,6 +79,10 @@ namespace Assembler {
                         if (!enumerator.MoveNext())
                             throw new Exception("Missing argument for --import");
                         imports.Add(enumerator.Current);
+                    }
+                    break;
+                    case "--verbose": {
+                        verbose = true;
                     }
                     break;
                     default: throw new Exception(string.Format("Unknown commandline option '{0}'", enumerator.Current));
@@ -128,7 +134,10 @@ namespace Assembler {
                 }
 
                 document.Resolve();
-                Console.WriteLine(document);
+
+                Console.WriteLine("Written {0} bytes to {1}", document.Position, output);
+                if (verbose)
+                    Console.WriteLine(document);
             }
         }
     }

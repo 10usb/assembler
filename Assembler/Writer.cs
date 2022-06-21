@@ -118,6 +118,7 @@ namespace Assembler {
         /// </summary>
         public void Flush() {
             stream.Flush();
+            stream.Position = stream.Length;
         }
 
         /// <summary>

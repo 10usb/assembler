@@ -178,6 +178,8 @@ namespace Assembler {
                 writer.Seek(entry.Offset);
                 writer.SetByte(number.Value);
             }
+
+            writer.Flush();
         }
 
         /// <summary>

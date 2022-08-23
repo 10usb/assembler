@@ -64,7 +64,7 @@ image:
 ```
 
 ## How to
-More for more infomation on how to build you're own code in this assembler see [How To page](howto.md)
+For more infomation on how to build you're own code in this assembler see [How To page](howto.md)
 
 ## Still needs to be added
  - import/including other files from within an import context

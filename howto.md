@@ -11,10 +11,10 @@ In most instruction sets you want to pass arguments that can then be used by the
  These can be have various notations decimal, hexidecimal octal and binary. Decimal values can be noted positive and negative other types can only be positive. Hexidecimal number have to be prefixed with `0x` and may contain `0` to `F` for example `0xA1`. Octal number starts with a `0`  and may only contain `0` to `7`. Binary number can only contain a `0` and `1` and must be postfixed by a `b` for binary for example `00101b`. The numbers are internaly stored as a 64 bit signed integer. Therfor if the 64th bit is set with any of the notations it will be treated in the expressions as a negative number.
 
  ### strings
- A string value it written by placing the text between `"qoutes"` it's use is limited. It can be used as parameter for the `db` instruction to output that value as an UTF-8 string or use it in comparisons.
+ A string value it written by placing the text between `"quotes"`. It's usage is limited. It can be used as parameter for the `db` instruction to output that value as an UTF-8 string or use it in comparisons.
 
  ### symbols
- Symbols have no value by them self but can only be used to reference to other variables or labels. Symbol can only contain these characters `a-z A-Z 0-9 $_` and can't start with a number.  
+ Symbols have no value by them self but can only be used to reference other variables or labels. Symbol can only contain these characters `a-z A-Z 0-9 $_` and can't start with a number.  
  *NOTE: When a symbol is used in an instruction it's value will be resolved before passing on. If is can find a variable for it in the local, global constant or types scope it will use that value. Otherwise it will be treated as an reference to a label*
 
 ## Labels
@@ -38,7 +38,7 @@ label: db 1 ; Comments
 - file - *embed the contents of a file*
 
 ### db
-The db instruction is the main instruction to output a value to the output file. It accepts multiple argument. In most cases this will make the code less readable. But it's vary usefull to output a nil terminated string.
+The db instruction is the main instruction to output a value to the output file. It accepts multiple argument. In most cases this will make the code less readable. But it's very usefull to output a null-terminated string.
 ```
 db "Hello world" 0
 ```
@@ -73,7 +73,7 @@ include "image.bmp"
 ```
 
 ### throw
-The throw is a globaly supported instrcuctions but it's usefullness it only within macro's. To check if values of arguments are of the correct type, within range or a global counter is below a certain  value.
+The throw is a globaly supported instruction but it's only usefull within macro's. To check if values of arguments are of the correct type, within range or a global counter is below a certain  value.
 
 ## Variables
 To not have often used number scatterd around the code variables can be defined. A variable can be in `global`, `local` and `const` scope. Variables in the global and const scope can be accesed from any where. Local scope variables can only be accessed in the current scope as the name implies. Variables don't have to be declared with the scope in front of it. Within a macro context it will result into a local variable. When declared in the global context its default scope is global. Local variables declared in the global context can only be access from within that context and is only shared to included files not imported files.

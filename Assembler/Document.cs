@@ -44,10 +44,17 @@ namespace Assembler {
         /// Constructs a Documents and opens a stream to the output file
         /// </summary>
         /// <param name="output"></param>
-        public Document(FileInfo output) {
+        public Document(FileInfo output) : this(output.Open(FileMode.Create)) { 
+        }
+
+        /// <summary>
+        /// Constructs a Documents and uses the stream as an output file
+        /// </summary>
+        /// <param name="output"></param>
+        public Document(Stream output) {
             referenceTable = new ReferenceTable();
             symbolTable = new SymbolTable();
-            writer = new Writer(output.Open(FileMode.Create));
+            writer = new Writer(output);
 
             globals = new VariableScope();
             constants = new VariableScope();

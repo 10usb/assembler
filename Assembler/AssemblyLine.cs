@@ -9,7 +9,7 @@ namespace Assembler {
     /// to the interpreters.
     /// </summary>
     public class AssemblyLine : ISourcePointer {
-        private readonly FileInfo source;
+        private readonly ISource source;
         private readonly int lineNr;
         private string label;
         private string assignment;
@@ -22,7 +22,7 @@ namespace Assembler {
         /// TODO add source file reference
         /// </summary>
         /// <param name="lineNr"></param>
-        public AssemblyLine(FileInfo source, int lineNr) {
+        public AssemblyLine(ISource source, int lineNr) {
             this.source = source;
             this.lineNr = lineNr;
         }
@@ -30,7 +30,7 @@ namespace Assembler {
         /// <summary>
         /// The the source file this line is from
         /// </summary>
-        public FileInfo Source => source;
+        public ISource Source => source;
 
         /// <summary>
         /// The line number in the source file this assembly line was found

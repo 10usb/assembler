@@ -77,7 +77,10 @@ namespace Assembler.Interpreters {
             if (Path.IsPathRooted(path)) {
                 file = new FileInfo(path);
             } else {
-                file = new FileInfo(Path.Combine(line.Source.Directory.FullName, path));
+                if (!(line.Source is FileSource source))
+                    throw new AssemblerException("Current code is not referenced to a file", trace.Create(line));
+
+                file = new FileInfo(Path.Combine(source.File.Directory.FullName, path));
                 if (!file.Exists)
                     file = document.ResolveInclude(path);
             }
@@ -85,7 +88,7 @@ namespace Assembler.Interpreters {
             if (file == null || !file.Exists)
                 throw new AssemblerException("File {0} not exists", trace.Create(line), path);
 
-            using (Parser parser = new Parser(file, router, trace.Create(line))) {
+            using (Parser parser = new Parser(new FileSource(file), router, trace.Create(line))) {
                 parser.Parse();
             }
         }
@@ -94,16 +97,17 @@ namespace Assembler.Interpreters {
             if (line.Arguments.Length != 1)
                 throw new AssemblerException("Unexpected argument count for include", trace.Create(line));
 
-            ;
             FileInfo file;
-
             if (line.Arguments[0] is Text text) {
                 string path = text.Value;
 
                 if (Path.IsPathRooted(path)) {
                     file = new FileInfo(path);
                 } else {
-                    file = new FileInfo(Path.Combine(line.Source.Directory.FullName, path));
+                    if (!(line.Source is FileSource source))
+                        throw new AssemblerException("Current code is not referenced to a file", trace.Create(line));
+
+                    file = new FileInfo(Path.Combine(source.File.Directory.FullName, path));
                     if (!file.Exists)
                         file = document.ResolveImport(path);
                 }
@@ -122,7 +126,7 @@ namespace Assembler.Interpreters {
 
             ImportInterpreter interpreter = new ImportInterpreter(router, document, trace.Create(line));
             router.PushState(interpreter);
-            using (Parser parser = new Parser(file, router, trace.Create(line))) {
+            using (Parser parser = new Parser(new FileSource(file), router, trace.Create(line))) {
                 parser.Parse();
             }
             router.PopState();

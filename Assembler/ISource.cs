@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 
 namespace Assembler {
     /// <summary>
-    /// A reference to a point in a source file
+    /// A instance able to supply the parser code to parse
     /// </summary>
-    public interface ISourcePointer {
+    public interface ISource {
         /// <summary>
-        /// The the source file this line is from
+        /// Reference name used in debugging output
         /// </summary>
-        ISource Source { get;  }
+        string Reference { get; }
 
         /// <summary>
-        /// The line number in the source file this assembly line was found
+        /// Creates text reader to be used by the parser
         /// </summary>
-        int LineNumber { get; }
+        /// <returns></returns>
+        TextReader Open();
     }
 }

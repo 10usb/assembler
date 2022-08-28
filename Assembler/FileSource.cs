@@ -8,8 +8,15 @@ using System.Threading.Tasks;
 namespace Assembler {
     public class FileSource : ISource {
         private readonly FileInfo file;
+
+        /// <summary>
+        /// The file this source points to
+        /// </summary>
         public FileInfo File => file;
 
+        /// <summary>
+        /// Returns the full path to the file
+        /// </summary>
         public string Reference => file.FullName;
 
         public FileSource(FileInfo file) {

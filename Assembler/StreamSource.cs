@@ -19,6 +19,12 @@ namespace Assembler {
             this.owner = owner;
         }
 
+        /// <summary>
+        /// TODO Add a wrapper around the returned StreamReader, so we can catch
+        /// the call to dispose. So we can track to see is the stream is activly
+        /// used. And if so throw an exception that it can only one at a time.
+        /// </summary>
+        /// <returns></returns>
         public TextReader Open() {
             // internal StreamReader.DefaultBufferSize = 1024
             return new StreamReader(stream, Encoding.UTF8, true, 1024, true);

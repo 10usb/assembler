@@ -32,17 +32,17 @@ namespace Assembler {
         private const int GROUP_BLOCKCLOSE = 8;
         private const int GROUP_COMMENTS = 9;
 
-        private readonly FileInfo source;
+        private readonly ISource source;
         private readonly IInterpreter interpreter;
         private readonly Trace trace;
         private readonly TextReader reader;
         private int lineNr;
 
-        public Parser(FileInfo source, IInterpreter interpreter, Trace trace) {
+        public Parser(ISource source, IInterpreter interpreter, Trace trace) {
             this.source = source;
             this.interpreter = interpreter;
             this.trace = trace;
-            reader = source.OpenText();
+            reader = source.Open();
             lineNr = 1;
         }
 

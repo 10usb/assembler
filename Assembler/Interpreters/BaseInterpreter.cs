@@ -116,7 +116,11 @@ namespace Assembler.Interpreters {
             if (Path.IsPathRooted(path)) {
                 file = new FileInfo(path);
             } else {
-                file = new FileInfo(Path.Combine(line.Source.Directory.FullName, path));
+                if (!(line.Source is FileSource source))
+                    throw new AssemblerException("Current code is not referenced to a file", trace.Create(line));
+
+                file = new FileInfo(Path.Combine(source.File.Directory.FullName, path));
+
             }
 
             if (file == null || !file.Exists)

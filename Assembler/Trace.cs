@@ -25,7 +25,7 @@ namespace Assembler {
         /// </summary>
         public Trace Previous { get; private set; }
 
-        public FileInfo Source => reference.Source;
+        public ISource Source => reference.Source;
 
         public int LineNumber => reference.LineNumber;
 
@@ -57,7 +57,7 @@ namespace Assembler {
         public override string ToString() {
             StringBuilder builder = new StringBuilder();
 
-            builder.AppendFormat(" - {0} on {1}", Source.FullName, LineNumber);
+            builder.AppendFormat(" - {0} on {1}", Source.Reference, LineNumber);
 
             if (Previous != null) {
                 builder.AppendLine();

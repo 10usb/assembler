@@ -121,7 +121,7 @@ namespace Assembler {
                 if (imports.Count > 0) {
                     foreach (string path in imports) {
                         router.PushState(new ImportInterpreter(router, document, Trace.Empty));
-                        using (Parser parser = new Parser(document.ResolveImport(path), router, Trace.Empty)) {
+                        using (Parser parser = new Parser(new FileSource(document.ResolveImport(path)), router, Trace.Empty)) {
                             parser.Parse();
                         }
                         router.PopState();
@@ -129,7 +129,7 @@ namespace Assembler {
                 }
 
                 router.PushState(new GlobalInterpreter(router, document));
-                using (Parser parser = new Parser(source, router, Trace.Empty)) {
+                using (Parser parser = new Parser(new FileSource(source), router, Trace.Empty)) {
                     parser.Parse();
                 }
 

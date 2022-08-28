@@ -13,7 +13,7 @@ namespace Assembler {
         /// <summary>
         /// The the source file this line is from
         /// </summary>
-        FileInfo Source { get;  }
+        ISource Source { get;  }
 
         /// <summary>
         /// The line number in the source file this assembly line was found

@@ -113,7 +113,7 @@ namespace Assembler {
                 foreach (DirectoryInfo directoryInfo in includePaths)
                     document.AddInclude(directoryInfo);
 
-                foreach (DirectoryInfo directoryInfo in includePaths)
+                foreach (DirectoryInfo directoryInfo in importPaths)
                     document.AddImport(directoryInfo);
 
                 Router router = new Router();

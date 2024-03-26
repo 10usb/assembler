@@ -1,0 +1,112 @@
+macro push a {
+    db 0
+    db a
+	db (a >> 8)
+	db (a >> 16)
+	db (a >> 24)
+}
+
+macro pushb a {
+    db 4
+    db a
+}
+
+macro pushw a {
+    db 5
+    db a
+	db (a >> 8)
+}
+
+macro pop {
+    db 1
+}
+macro load {
+    db 2
+}
+macro stor {
+    db 3
+}
+macro clone {
+    db 6
+}
+macro loads {
+    db 7
+}
+macro stors {
+    db 8
+}
+macro swap {
+    db 9
+}
+macro jmp {
+    db 16
+}
+macro jz {
+    db 17
+}
+macro jnz {
+    db 18
+}
+macro jg {
+    db 19
+}
+macro jge {
+    db 20
+}
+macro je {
+    db 21
+}
+macro jne {
+    db 22
+}
+macro and {
+    db 32
+}
+macro or {
+    db 33
+}
+macro xor {
+    db 34
+}
+macro not {
+    db 35
+}
+macro inc {
+    db 36
+}
+macro dec {
+    db 37
+}
+macro add {
+    db 38
+}
+macro sub {
+    db 39
+}
+macro shl {
+    db 40
+}
+macro shr {
+    db 41
+}
+macro mul {
+    db 42
+}
+macro div {
+    db 43
+}
+macro mod {
+    db 44
+}
+macro neg {
+    db 45
+}
+macro abs {
+    db 46
+}
+macro debug {
+    db 254
+}
+macro nop {
+    db 255
+}
